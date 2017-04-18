@@ -708,10 +708,12 @@
 				<module>hapi-structures-v25</module>
 				<module>hapi-structures-v251</module>
 				<module>hapi-structures-v26</module>
+				<!--
 				<module>hapi-structures-v27</module>
 				<module>hapi-structures-v271</module>
 				<module>hapi-structures-v28</module>
 				<module>hapi-structures-v281</module>
+				-->
 				<module>hapi-hl7overhttp</module>
 				<module>hapi-osgi-base</module>
 				<module>hapi-testpanel</module>

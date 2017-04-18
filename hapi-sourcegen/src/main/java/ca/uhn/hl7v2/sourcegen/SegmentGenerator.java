@@ -185,7 +185,9 @@ public class SegmentGenerator extends java.lang.Object {
 			if (version.startsWith("2.7") || version.startsWith("2.8")) {
 				lengthColName = "HL7DataElements.max_length";
 			} else {
-				lengthColName = "HL7DataElements.length";
+			    // if using the "all-version" Access database
+				//lengthColName = "HL7DataElements.length";
+				lengthColName = "HL7DataElements.max_length";
 			}
 			
 			StringBuffer sql = new StringBuffer();
@@ -278,6 +280,13 @@ public class SegmentGenerator extends java.lang.Object {
 				if (version.equals("2.3") && name.equals("PID") && index == 5) {
 					se.rep = "Y";
 					se.repetitions = -1;
+				}
+				
+				if (version.equals("2.3.1") && name.equals("OM1") && se.type.equals("TX_CHALLENGE")) {
+				    // The "all-version" Access database doesn't seem to have the datatype definition for this so
+				    // need to rename it to the generic datatype
+				    //System.err.println("TX_CHALLENGE");
+				    se.type = "TX";
 				}
 
 				elements.add(se);

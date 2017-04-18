@@ -84,7 +84,7 @@ public class DataTypeGenerator extends Object {
         
         ArrayList<String> types = getDataTypes(version);
         
-        System.out.println("Generating " + types.size() + " datatypes for version " + version);
+        System.out.println("Generating " + types.size() + " datatypes for version " + version + ". " + types);
         if (types.size() == 0) { 
             log.warn("No version {} data types found in database {}", 
             		version, System.getProperty("ca.on.uhn.hl7.database.url"));
@@ -115,21 +115,24 @@ public class DataTypeGenerator extends Object {
         Connection conn = normativeDatabase.getConnection();
         Statement stmt = conn.createStatement();
         //get normal data types ... 
-        ResultSet rs = stmt.executeQuery("select data_type_code from HL7DataTypes, HL7Versions where HL7Versions.version_id = HL7DataTypes.version_id and HL7Versions.hl7_version = '" + version + "'");
+        String normalTypeQuery = "select data_type_code from HL7DataTypes, HL7Versions where HL7Versions.version_id = HL7DataTypes.version_id and HL7Versions.hl7_version = '" + version + "'";
+        System.err.println("normaldatatype query version '" + version + "': " + normalTypeQuery);
+        ResultSet rs = stmt.executeQuery(normalTypeQuery);
         while (rs.next()) {
             types.add(rs.getString(1));
         }
         
         
         //get CF, CK, CM, CN, CQ sub-types ... 
- 
-       rs = stmt.executeQuery("select data_structure from HL7DataStructures, HL7Versions where (" + 
+        String subtypeQuery = "select data_structure from HL7DataStructures, HL7Versions where (" + 
             "data_type_code  = 'CF' or " + 
             "data_type_code  = 'CK' or " + 
             "data_type_code  = 'CM' or " + 
             "data_type_code  = 'CN' or " + 
             "data_type_code  = 'CQ') and " +
-	    "HL7Versions.version_id = HL7DataStructures.version_id and  HL7Versions.hl7_version = '" + version + "'");
+        "HL7Versions.version_id = HL7DataStructures.version_id and  HL7Versions.hl7_version = '" + version + "'";
+        System.err.println("subdatatype query version '" + version + "': " + subtypeQuery);
+       rs = stmt.executeQuery(subtypeQuery);
         while (rs.next()) {
             String string = rs.getString(1);
             if (string.equals("-")) {
@@ -176,7 +179,7 @@ public class DataTypeGenerator extends Object {
         sql.append("' AND HL7Versions.hl7_version = '");
         sql.append(version);
         sql.append("' ORDER BY HL7DataStructureComponents.seq_no");
-        //System.out.println(sql.toString());  //for debugging
+        System.err.println("For datatype " + dataType + " version " + version + ": " + sql.toString());  //for debugging
         ResultSet rs = stmt.executeQuery(sql.toString());
         
         ArrayList<String> dataTypes = new ArrayList<String>(20);
@@ -210,14 +213,32 @@ public class DataTypeGenerator extends Object {
         //if there is only one component make a Primitive, otherwise make a Composite
         String source = null;
         if (dataTypes.size() == 1) {
+        	System.out.println("datatype "+dataType+" is a primitive");
             if (ourMakeAll || dataType.equals("FT") || dataType.equals("ST") || dataType.equals("TX") 
                     || dataType.equals("NM") || dataType.equals("SI") || dataType.equals("TN")
-                    || dataType.equals("GTS")) { 
-                source = makePrimitive(new DatatypeDef(dataType, description), version, basePackage, theTemplatePackage);                
+                    || dataType.equals("GTS")
+                    // V2.1 add so these will be generated
+                    || dataType.equals("AD") || dataType.equals("CN") || dataType.equals("CQ")
+                    || dataType.equals("CK") || dataType.equals("PN")
+                    // V2.2 add so these will be generated
+                    || dataType.equals("CM_UNDEFINED") || dataType.equals("CQ_COMP_QUANT")
+                    || dataType.equals("COMP_ID_DIGIT")
+                    // V2.3 add so these will be generated
+                    || dataType.equals("CM_OSD") || dataType.equals("TQ") || dataType.equals("CM_CD_ELECTRODE")
+                    || dataType.equals("CM_CSU") || dataType.equals("CM_CCP") || dataType.equals("CM_MDV")) { 
+                if (dataType.equals("CM_CD_ELECTRODE")) {
+                    // dummy description set if not defined
+                    if (null == description) {
+                        description = "..CM_CD_ELECTRODE..";
+                    }
+                }
+                source = makePrimitive(new DatatypeDef(dataType, description), version, basePackage, theTemplatePackage);
+                //System.out.println("datatype "+dataType+" source generated? " + (null != source));
             } else {
                 source = null; //note: IS, ID, DT, DTM, and TM are coded manually
             }
         } else if (dataTypes.size() > 1) {
+        	//System.out.println("datatype "+dataType+" is a composite");
             int numComponents = dataTypes.size();
             //copy data into arrays ... 
             String[] type = new String[numComponents];
@@ -249,6 +270,7 @@ public class DataTypeGenerator extends Object {
             }
             
             source = makeComposite(dataType, description, componentDefs, type, desc, table, version, basePackage, theTemplatePackage);
+            //System.out.println("datatype "+dataType+" source generated? " + (null != source));
         } else {
             if (dataType.equals("var")) {
                 return; // Varies isn't actually a type
@@ -271,6 +293,8 @@ public class DataTypeGenerator extends Object {
             } finally {
             	if (writer != null) writer.close();
             }
+        } else {
+        	//System.out.println("datatype "+dataType+" had null source");
         }
     }
 

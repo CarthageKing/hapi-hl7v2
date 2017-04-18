@@ -285,7 +285,7 @@
 							</descriptors>
 						</configuration>
 					</execution>
-					<execution>
+					<!--<execution>
 						<id>javadoc</id>
 						<phase>package</phase>
 						<goals>
@@ -296,7 +296,7 @@
 								<descriptor>../src/assembly/osgi-javadoc.xml</descriptor>
 							</descriptors>
 						</configuration>
-					</execution>
+					</execution>-->
 				</executions>
 			</plugin>
 		</plugins>
