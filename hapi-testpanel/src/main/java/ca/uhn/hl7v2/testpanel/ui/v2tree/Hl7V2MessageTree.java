@@ -159,7 +159,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			}
 		});
 
-		setFont(new Font("LUCIDA", Font.PLAIN, 9));
+		setFont(new Font("LUCIDA", Font.PLAIN, 14));
 
 		myController = theController;
 
@@ -1975,8 +1975,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			StringBuilder b = new StringBuilder();
 
 			b.append(myParentName);
-			// b.append(" ");
-			// b.append(getName());
+			b.append(" ");
+			b.append(getName());
 
 			if (isRepeating() && (myShowRep0 || getRepNum() > 0)) {
 				b.append("<font color=\"" + COLOR_REPNUM + "\">");
