@@ -32,6 +32,7 @@
 	</properties>
 
 	<build>
+	    <sourceDirectory>${basedir}/target/generated-sources/sourcegen</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>ca.uhn.hapi</groupId>
