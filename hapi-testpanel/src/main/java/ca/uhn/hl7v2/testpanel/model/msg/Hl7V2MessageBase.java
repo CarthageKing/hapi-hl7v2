@@ -27,7 +27,10 @@ package ca.uhn.hl7v2.testpanel.model.msg;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.tree.TreeNode;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +49,8 @@ import ca.uhn.hl7v2.preparser.PreParser;
 import ca.uhn.hl7v2.testpanel.model.conf.ConformanceMessage;
 import ca.uhn.hl7v2.testpanel.model.conf.ProfileGroup;
 import ca.uhn.hl7v2.testpanel.model.conf.ProfileGroup.Entry;
+import ca.uhn.hl7v2.testpanel.ui.v2tree.Hl7V2MessageTree.TreeNodeBase;
+import ca.uhn.hl7v2.testpanel.ui.v2tree.Hl7V2MessageTree.TreeNodeType;
 import ca.uhn.hl7v2.testpanel.util.Range;
 import ca.uhn.hl7v2.testpanel.util.SegmentAndComponentPath;
 import ca.uhn.hl7v2.testpanel.xsd.Hl7V2EncodingTypeEnum;
@@ -474,4 +479,141 @@ public abstract class Hl7V2MessageBase extends AbstractMessage<Message> {
 		return currentRange;
 	}
 
+    static Range findFieldRangeV2(SegmentAndComponentPath scPath, Range theSegmentRange, String theSourceMessage, Message theParsedMessage) {
+        List<Integer> theField = scPath.getComponentPath();
+        int theRepNum = scPath.getRepNum();
+        EncodingCharacters enc;
+        try {
+            enc = EncodingCharacters.getInstance(theParsedMessage);
+        } catch (HL7Exception e) {
+            ourLog.error("Failed to find field", e);
+            return null;
+        }
+
+        Range currentRange = theSegmentRange;
+        String theRangedMessage = theSourceMessage.substring(currentRange.getStart(), currentRange.getEnd());
+        boolean isMsh = false;
+        
+        if (theRangedMessage.startsWith("MSH")) {
+            isMsh = true;
+        }
+
+        if (theField.size() > 0) {
+            List<RangedField> fields = parseToFields(theRangedMessage, currentRange.getStart(), enc.getFieldSeparator());
+            if (isMsh) {
+                // fix the data when highlighting MSH segment
+                RangedField prev = fields.get(0);
+                RangedField next = fields.get(1);
+                RangedField rf = new RangedField(new Range(prev.range.getEnd(), next.range.getStart()), "\0");
+                fields.add(1, rf);
+            }
+            RangedField f = fields.get(theField.get(0));
+            theRangedMessage = f.value;
+            currentRange = f.range;
+
+            boolean willRepeat = false;
+
+            if (theRepNum > 0) {
+                willRepeat = true;
+            } else {
+                // Field does not repeat. However, this selected field could be a child of a node
+                // that does repeat or that the parent does not repeat but its parent does. The second scenario
+                // happens for subcomponent fields. In order to properly highlight this field we need to get
+                // the parent's or grandparent's repetition number
+                TreeNodeType tn = getTopmostParent(scPath.getNodeRef());
+                if (tn instanceof TreeNodeBase) {
+                    TreeNodeBase tnb = (TreeNodeBase) tn;
+                    Boolean r = tnb.isRepeating();
+                    if (null != r) {
+                        willRepeat = r;
+                        if (willRepeat) {
+                            theRepNum = tnb.getRepNum() + 1;
+                        }
+                    }
+                }
+            }
+
+            if (willRepeat) {
+                fields = parseToFields(theRangedMessage, currentRange.getStart(), enc.getRepetitionSeparator());
+                f = fields.get(theRepNum - 1);
+                theRangedMessage = f.value;
+                currentRange = f.range;
+            }
+        }
+
+        if (theField.size() > 1) {
+            List<RangedField> fields = parseToFields(theRangedMessage, currentRange.getStart(), enc.getComponentSeparator());
+            RangedField f = fields.get(theField.get(1) - 1);
+            theRangedMessage = f.value;
+            currentRange = f.range;
+        }
+
+        if (theField.size() > 2) {
+            List<RangedField> fields = parseToFields(theRangedMessage, currentRange.getStart(), enc.getSubcomponentSeparator());
+            RangedField f = fields.get(theField.get(2) - 1);
+            theRangedMessage = f.value;
+            currentRange = f.range;
+        }
+
+        if (theField.size() > 3) {
+            ourLog.error("theField has more than 3 levels of nesting: {}", theField);
+        }
+
+        return currentRange;
+    }
+
+    private static TreeNodeType getTopmostParent(TreeNodeType nodeRef) {
+        TreeNodeType tnt = nodeRef;
+        while (tnt instanceof TreeNodeType) {
+            TreeNode tn = tnt.getParent();
+            if (null != tn && tn instanceof TreeNodeType) {
+                tnt = (TreeNodeType) tn;
+            } else {
+                break;
+            }
+        }
+        return tnt;
+    }
+
+    static List<RangedField> parseToFields(String str, int offsetStart, char separator) {
+        int start = 0;
+        List<RangedField> fields = new ArrayList<RangedField>();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (separator == c) {
+                if ((i - start) > 0) {
+                    String v = str.substring(start, i);
+                    fields.add(new RangedField(new Range(offsetStart + start, offsetStart + i), v));
+                } else {
+                    String v = "";
+                    fields.add(new RangedField(new Range(offsetStart + start, offsetStart + i), v));
+                }
+                start = i + 1;
+            }
+        }
+        if (start < str.length()) {
+            String v = str.substring(start);
+            fields.add(new RangedField(new Range(offsetStart + start, offsetStart + str.length()), v));
+        } else {
+            String v = "";
+            fields.add(new RangedField(new Range(offsetStart + start, offsetStart + str.length()), v));
+        }
+        return fields;
+    }
+
+    static class RangedField {
+
+        Range range;
+        String value;
+
+        public RangedField(Range theRange, String theValue) {
+            range = theRange;
+            value = theValue;
+        }
+
+        @Override
+        public String toString() {
+            return value + "," + range.getStart() + "," + range.getEnd();
+        }
+    }
 }

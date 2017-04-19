@@ -2027,7 +2027,10 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		}
 
 		public SegmentAndComponentPath getSegmentAndComponentPath() {
-			return new SegmentAndComponentPath(mySegment, myComponentPath, getRepNum() + 1);
+		    if (null != isRepeating() && isRepeating()) {
+		        return new SegmentAndComponentPath(mySegment, myComponentPath, getRepNum() + 1, this);
+		    }
+            return new SegmentAndComponentPath(mySegment, myComponentPath, -1, this);
 		}
 
 		public Type getType() {

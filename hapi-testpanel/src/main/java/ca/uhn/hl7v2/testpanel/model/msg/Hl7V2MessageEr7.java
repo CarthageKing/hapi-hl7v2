@@ -239,7 +239,8 @@ public class Hl7V2MessageEr7 extends Hl7V2MessageBase {
 		String sourceMessage = getSourceMessage();
 		Message parsedMessage = getParsedMessage();
 
-		Range currentRange = findFieldRange(theField.getComponentPath(), theField.getRepNum(), segmentRange, sourceMessage, parsedMessage);
+		//Range currentRange = findFieldRange(theField.getComponentPath(), theField.getRepNum(), segmentRange, sourceMessage, parsedMessage);
+		Range currentRange = findFieldRangeV2(theField, segmentRange, sourceMessage, parsedMessage);
 		setHighlitedPathBasedOnRange(currentRange);
 		myHighlitedRange = currentRange;
 

@@ -30,12 +30,14 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 
 import ca.uhn.hl7v2.model.Segment;
+import ca.uhn.hl7v2.testpanel.ui.v2tree.Hl7V2MessageTree.TreeNodeType;
 
 public class SegmentAndComponentPath {
 
 	private List<Integer> myComponentPath;
 	private int myRepNum = 1;
 	private Segment mySegment;
+	private TreeNodeType myNodeRef;
 
 	public SegmentAndComponentPath(Segment theSegment, List<Integer> theComponentPath) {
 		super();
@@ -48,11 +50,12 @@ public class SegmentAndComponentPath {
 		myComponentPath = theComponentPath;
 	}
 
-	public SegmentAndComponentPath(Segment theSegment, List<Integer> theComponentPath, int theRepNumber) {
+	public SegmentAndComponentPath(Segment theSegment, List<Integer> theComponentPath, int theRepNumber, TreeNodeType theNode) {
 		this(theSegment, theComponentPath);
 		assert theRepNumber > 0;
 		
 		myRepNum = theRepNumber;
+		myNodeRef = theNode;
 	}
 
 	/**
@@ -89,6 +92,13 @@ public class SegmentAndComponentPath {
 	public Segment getSegment() {
 		return mySegment;
 	}
+	
+	/**
+	 * @return the node reference
+	 */
+	public TreeNodeType getNodeRef() {
+	    return myNodeRef;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -98,4 +108,8 @@ public class SegmentAndComponentPath {
 		return mySegment.hashCode() + myComponentPath.hashCode();
 	}
 
+	@Override
+	public String toString() {
+	    return "" + myComponentPath;
+	}
 }

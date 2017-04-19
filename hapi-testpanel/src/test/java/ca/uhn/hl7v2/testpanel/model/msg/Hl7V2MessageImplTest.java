@@ -27,6 +27,7 @@ package ca.uhn.hl7v2.testpanel.model.msg;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +36,7 @@ import org.junit.Test;
 import ca.uhn.hl7v2.DefaultHapiContext;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.message.ADT_A01;
-import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.testpanel.model.msg.Hl7V2MessageBase.RangedField;
 import ca.uhn.hl7v2.testpanel.util.Range;
 import ca.uhn.hl7v2.validation.builder.support.NoValidationBuilder;
 import junit.framework.Assert;
@@ -236,4 +237,96 @@ public class Hl7V2MessageImplTest {
 
 	}
 
+    @Test
+    public void testParseToFields() throws Exception {
+        String msg = "|||";
+        List<RangedField> fields = Hl7V2MessageBase.parseToFields(msg, 0, '|');
+        Assert.assertEquals(4, fields.size());
+        Assert.assertEquals(0, fields.get(0).value.length());
+        Assert.assertEquals(0, fields.get(0).range.getStart());
+        Assert.assertEquals(0, fields.get(0).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(1).value.length());
+        Assert.assertEquals(1, fields.get(1).range.getStart());
+        Assert.assertEquals(1, fields.get(1).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(2).value.length());
+        Assert.assertEquals(2, fields.get(2).range.getStart());
+        Assert.assertEquals(2, fields.get(2).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(3).value.length());
+        Assert.assertEquals(3, fields.get(3).range.getStart());
+        Assert.assertEquals(3, fields.get(3).range.getEnd());
+
+        msg = "ABC|||";
+        fields = Hl7V2MessageBase.parseToFields(msg, 0, '|');
+        Assert.assertEquals(4, fields.size());
+        Assert.assertEquals("ABC", fields.get(0).value);
+        Assert.assertEquals(0, fields.get(0).range.getStart());
+        Assert.assertEquals(3, fields.get(0).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(1).value.length());
+        Assert.assertEquals(4, fields.get(1).range.getStart());
+        Assert.assertEquals(4, fields.get(1).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(2).value.length());
+        Assert.assertEquals(5, fields.get(2).range.getStart());
+        Assert.assertEquals(5, fields.get(2).range.getEnd());
+
+        Assert.assertEquals(0, fields.get(3).value.length());
+        Assert.assertEquals(6, fields.get(3).range.getStart());
+        Assert.assertEquals(6, fields.get(3).range.getEnd());
+
+        msg = "ABC| ds |\"\"| ";
+        fields = Hl7V2MessageBase.parseToFields(msg, 0, '|');
+        Assert.assertEquals(4, fields.size());
+        Assert.assertEquals("ABC", fields.get(0).value);
+        Assert.assertEquals(0, fields.get(0).range.getStart());
+        Assert.assertEquals(3, fields.get(0).range.getEnd());
+
+        Assert.assertEquals(" ds ", fields.get(1).value);
+        Assert.assertEquals(4, fields.get(1).range.getStart());
+        Assert.assertEquals(8, fields.get(1).range.getEnd());
+
+        Assert.assertEquals("\"\"", fields.get(2).value);
+        Assert.assertEquals(9, fields.get(2).range.getStart());
+        Assert.assertEquals(11, fields.get(2).range.getEnd());
+
+        Assert.assertEquals(" ", fields.get(3).value);
+        Assert.assertEquals(12, fields.get(3).range.getStart());
+        Assert.assertEquals(13, fields.get(3).range.getEnd());
+
+        msg = "";
+        fields = Hl7V2MessageBase.parseToFields(msg, 0, '|');
+        Assert.assertEquals(1, fields.size());
+        Assert.assertEquals("", fields.get(0).value);
+        Assert.assertEquals(0, fields.get(0).range.getStart());
+        Assert.assertEquals(0, fields.get(0).range.getEnd());
+
+        msg = " ";
+        fields = Hl7V2MessageBase.parseToFields(msg, 0, '|');
+        Assert.assertEquals(1, fields.size());
+        Assert.assertEquals(" ", fields.get(0).value);
+        Assert.assertEquals(0, fields.get(0).range.getStart());
+        Assert.assertEquals(1, fields.get(0).range.getEnd());
+
+        msg = "ABC| ds |\"\"| ";
+        fields = Hl7V2MessageBase.parseToFields(msg, 55, '|');
+        Assert.assertEquals(4, fields.size());
+        Assert.assertEquals("ABC", fields.get(0).value);
+        Assert.assertEquals(55, fields.get(0).range.getStart());
+        Assert.assertEquals(58, fields.get(0).range.getEnd());
+
+        Assert.assertEquals(" ds ", fields.get(1).value);
+        Assert.assertEquals(59, fields.get(1).range.getStart());
+        Assert.assertEquals(63, fields.get(1).range.getEnd());
+
+        Assert.assertEquals("\"\"", fields.get(2).value);
+        Assert.assertEquals(64, fields.get(2).range.getStart());
+        Assert.assertEquals(66, fields.get(2).range.getEnd());
+
+        Assert.assertEquals(" ", fields.get(3).value);
+        Assert.assertEquals(67, fields.get(3).range.getStart());
+        Assert.assertEquals(68, fields.get(3).range.getEnd());
+    }
 }
