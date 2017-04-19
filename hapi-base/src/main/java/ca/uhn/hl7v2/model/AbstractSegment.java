@@ -293,8 +293,11 @@ public abstract class AbstractSegment extends AbstractStructure implements
 			for (int i = 0; i < args.length; i++) {
 				if (args[i] instanceof Message) {
 					argClasses[i] = Message.class;
-				} else {
+				} else if (null != args[i]) {
 					argClasses[i] = args[i].getClass();
+				} else {
+				    // TODO: this is supposed to be friendlyName, find a more robust way to handle it
+				    argClasses[i] = String.class;
 				}
 			}
 			newType = c.getConstructor(argClasses).newInstance(args);
@@ -324,7 +327,7 @@ public abstract class AbstractSegment extends AbstractStructure implements
 		if (o != null && o instanceof Object[]) {
 			result = (Object[]) o;
 		} else {
-			result = new Object[] { getMessage() };
+			result = new Object[] { getMessage(), (String) null };
 		}
 
 		return result;

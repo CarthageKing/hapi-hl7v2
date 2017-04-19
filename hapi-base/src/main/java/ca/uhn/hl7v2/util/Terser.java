@@ -235,7 +235,7 @@ public class Terser {
         if (type instanceof Varies && comp instanceof GenericPrimitive && subcomponent > 1) {
             try {
                 final Varies varies = (Varies) type;
-                final GenericComposite comp2 = new GenericComposite(type.getMessage());
+                final GenericComposite comp2 = new GenericComposite(type.getMessage(), null);
                 varies.setData(comp2);
                 comp = getComponent(type, component);
             } catch (final DataTypeException de) {
@@ -293,7 +293,7 @@ public class Terser {
             Varies v = (Varies) type;
             try {
                 if (comp > 1 && GenericPrimitive.class.isAssignableFrom(v.getData().getClass()))
-                    v.setData(new GenericComposite(v.getMessage()));
+                    v.setData(new GenericComposite(v.getMessage(), null));
             } catch (DataTypeException e) {
                 throw new RuntimeException("Unexpected exception copying data to generic composite: " + e.getMessage(),
                         e);

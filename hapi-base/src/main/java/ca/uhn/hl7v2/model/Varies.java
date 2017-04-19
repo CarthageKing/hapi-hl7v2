@@ -109,9 +109,10 @@ public class Varies implements Variable {
      * Creates new Varies.
      *
      * @param message message to which this type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public Varies(Message message) {
-        data = new GenericPrimitive(message);
+    public Varies(Message message, String friendlyName) {
+        data = new GenericPrimitive(message, friendlyName);
         this.message = message;
     }
 
@@ -129,6 +130,15 @@ public class Varies implements Variable {
         String name = "*";
         if (this.data != null) {
             name = this.data.getName();
+        }
+        return name;
+    }
+    
+    @Override
+    public String getFriendlyName() {
+        String name = "*";
+        if (this.data != null) {
+            name = this.data.getFriendlyName();
         }
         return name;
     }

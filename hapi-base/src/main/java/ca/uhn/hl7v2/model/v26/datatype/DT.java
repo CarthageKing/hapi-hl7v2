@@ -48,9 +48,10 @@ public class DT extends ca.uhn.hl7v2.model.primitive.DT {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public DT(Message theMessage) {
-        super(theMessage);
+    public DT(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     /**

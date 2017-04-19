@@ -12,8 +12,8 @@ public abstract class AbstractPersonNameComposite extends AbstractType implement
 	/**
 	 * Constructor
 	 */
-	public AbstractPersonNameComposite(Message theMessage) {
-		super(theMessage);
+	public AbstractPersonNameComposite(Message theMessage, String friendlyName) {
+		super(theMessage, friendlyName);
 	}
 
 

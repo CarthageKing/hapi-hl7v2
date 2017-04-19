@@ -80,7 +80,7 @@ public class ExtraComponents implements Serializable {
      */
     private void ensureComponentAndPredecessorsExist(int comp) {
         for (int i = this.comps.size(); i <= comp; i++) {
-            this.comps.add(new Varies(message));
+            this.comps.add(new Varies(message, null));
         }
     }
 

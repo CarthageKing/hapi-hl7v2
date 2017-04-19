@@ -20,9 +20,10 @@ public class NULLDT extends AbstractPrimitive
      * Constructor
      * 
      * @param theMessage The message
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public NULLDT(Message theMessage) {
-        super(theMessage);
+    public NULLDT(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     private static final long serialVersionUID = -2676962788248439865L;

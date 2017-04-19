@@ -50,7 +50,7 @@ public class ConformanceComposite extends AbstractType implements Composite, Con
 	 * Constructor
 	 */
 	public ConformanceComposite(ConformanceMessage theMessage, AbstractComponent theConfDefinition) {
-		super(theMessage);
+		super(theMessage, null);
 		
 		myConfDefinition = theConfDefinition;
 	}

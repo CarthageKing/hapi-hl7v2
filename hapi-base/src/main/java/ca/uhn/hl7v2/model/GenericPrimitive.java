@@ -12,9 +12,10 @@ public class GenericPrimitive extends AbstractPrimitive implements Primitive {
     /**
      * Create a generic primitive
      * @param message message to which the primitive is linked to
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public GenericPrimitive(Message message) {
-        super(message);
+    public GenericPrimitive(Message message, String friendlyName) {
+        super(message, friendlyName);
     }
 
     public String getName() {

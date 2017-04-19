@@ -6,7 +6,7 @@ import ca.uhn.hl7v2.model.Message;
 public abstract class AbstractNumericPrimitive extends AbstractPrimitive {
 
 	public AbstractNumericPrimitive(Message theMessage) {
-		super(theMessage);
+		super(theMessage, null);
 	}
 
 	/**

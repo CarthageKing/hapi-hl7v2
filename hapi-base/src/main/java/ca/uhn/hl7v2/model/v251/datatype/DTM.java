@@ -81,9 +81,10 @@ public class DTM extends ca.uhn.hl7v2.model.primitive.TSComponentOne {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public DTM(Message theMessage) {
-        super(theMessage);
+    public DTM(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     /**

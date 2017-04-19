@@ -54,26 +54,29 @@ public abstract class IS extends AbstractTextPrimitive {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public IS(Message theMessage) {
-        super(theMessage);
+    public IS(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     /**
      * @param theMessage message to which this Type belongs
-     * @param theTable HL7 table from which values are to be drawn 
+     * @param theTable HL7 table from which values are to be drawn
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address") 
      */
-    public IS(Message theMessage, int theTable) {
-        super(theMessage);
+    public IS(Message theMessage, int theTable, String friendlyName) {
+        super(theMessage, friendlyName);
         myTable = theTable;
     }
     
     /**
      * @param theMessage message to which this Type belongs
      * @param theTable HL7 table from which values are to be drawn 
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public IS(Message theMessage, Integer theTable) {
-        super(theMessage);
+    public IS(Message theMessage, Integer theTable, String friendlyName) {
+        super(theMessage, friendlyName);
         myTable = theTable;
     }
     

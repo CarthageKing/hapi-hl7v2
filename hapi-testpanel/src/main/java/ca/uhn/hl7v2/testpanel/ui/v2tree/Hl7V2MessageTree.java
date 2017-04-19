@@ -539,6 +539,9 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			if (primitive instanceof ConformancePrimitive) {
 				newNode = new TreeNodePrimitiveConf(theParentName, (ConformancePrimitive) primitive, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			} else {
+			    if (null == theName) {
+			        theName = primitive.getFriendlyName();
+			    }
 				newNode = new TreeNodePrimitive(theParentName, primitive, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			}
 

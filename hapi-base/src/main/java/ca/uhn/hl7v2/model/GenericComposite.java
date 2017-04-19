@@ -20,9 +20,10 @@ public class GenericComposite extends AbstractComposite {
      * Creates a generic composite
      *
      * @param message message this object is linked to
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public GenericComposite(Message message) {
-        super(message);
+    public GenericComposite(Message message, String friendlyName) {
+        super(message, friendlyName);
         this.message = message;
         components = new ArrayList<Type>(20);
     }
@@ -33,7 +34,7 @@ public class GenericComposite extends AbstractComposite {
      */
     public Type getComponent(int number) throws DataTypeException {
         for (int i = components.size(); i <= number; i++) {
-            components.add(new Varies(message));
+            components.add(new Varies(message, null));
         }
         return components.get(number);
     }    

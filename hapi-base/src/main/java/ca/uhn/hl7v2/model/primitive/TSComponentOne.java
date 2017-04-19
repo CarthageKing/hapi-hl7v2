@@ -53,9 +53,10 @@ public abstract class TSComponentOne extends AbstractPrimitive {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public TSComponentOne(Message theMessage) {
-        super(theMessage);
+    public TSComponentOne(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     private CommonTS getDetail() throws DataTypeException {

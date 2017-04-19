@@ -67,9 +67,10 @@ public class TM extends ca.uhn.hl7v2.model.primitive.TM {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public TM(Message theMessage) {
-        super(theMessage);
+    public TM(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     /**

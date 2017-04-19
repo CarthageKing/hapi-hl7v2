@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 
 public class DatatypeDef {
 
@@ -38,6 +39,10 @@ public class DatatypeDef {
 
     public String getName() {
         return name;
+    }
+    
+    public String getNameEscaped() {
+        return (null == name ? null : WordUtils.capitalize(name).replace("\"", "\\\""));
     }
 
 

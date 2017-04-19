@@ -40,8 +40,8 @@ public abstract class AbstractTextPrimitive extends AbstractPrimitive {
 	/**
 	 * Constructor
 	 */
-	public AbstractTextPrimitive(Message theMessage) {
-		super(theMessage);
+	public AbstractTextPrimitive(Message theMessage, String friendlyName) {
+		super(theMessage, friendlyName);
 	}
 
 	/**

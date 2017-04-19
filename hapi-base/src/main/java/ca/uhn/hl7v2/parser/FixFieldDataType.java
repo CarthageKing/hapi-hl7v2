@@ -192,11 +192,11 @@ public final class FixFieldDataType {
 
                     Type newTypeInstance;
                     try {
-                        Constructor<? extends Type> constr = c.getConstructor(new Class[]{Message.class});
-                        newTypeInstance = constr.newInstance(v.getMessage());
+                        Constructor<? extends Type> constr = c.getConstructor(new Class[]{Message.class, String.class});
+                        newTypeInstance = constr.newInstance(v.getMessage(), (String) null);
                     } catch (NoSuchMethodException e) {
-                        Constructor<? extends Type> constr = c.getConstructor(new Class[]{Message.class, Integer.class});
-                        newTypeInstance = constr.newInstance(v.getMessage(), 0);
+                        Constructor<? extends Type> constr = c.getConstructor(new Class[]{Message.class, Integer.class, String.class});
+                        newTypeInstance = constr.newInstance(v.getMessage(), 0, (String) null);
                     }
 
                     boolean escapeSubcomponentDelimInPrimitive =

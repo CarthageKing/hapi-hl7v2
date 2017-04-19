@@ -39,8 +39,8 @@ public abstract class AbstractComposite extends AbstractType implements
 
 	protected Logger log;
 
-	public AbstractComposite(Message message) {
-		super(message);
+	public AbstractComposite(Message message, String friendlyName) {
+		super(message, friendlyName);
 		log = LoggerFactory.getLogger(getClass());
 	}
 

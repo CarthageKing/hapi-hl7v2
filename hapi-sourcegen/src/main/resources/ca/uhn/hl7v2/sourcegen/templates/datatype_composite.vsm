@@ -60,8 +60,8 @@ public class ${datatypeName} extends AbstractComposite {
     /** 
      * Creates a new ${datatypeName} type
      */
-    public ${datatypeName}(Message message) {
-        super(message);
+    public ${datatypeName}(Message message, String friendlyName) {
+        super(message, friendlyName);
         init();
     }
 
@@ -70,9 +70,9 @@ public class ${datatypeName} extends AbstractComposite {
 #foreach ( $component in $components)
 #set ( $idx = ${velocityCount} - 1 )
 #if (${component.idType})
-        data[${idx}] = new ${component.type}(getMessage(), ${component.table});
+        data[${idx}] = new ${component.type}(getMessage(), ${component.table}, "${component.nameEscaped}");
 #else
-        data[${idx}] = new ${component.type}(getMessage());
+        data[${idx}] = new ${component.type}(getMessage(), "${component.nameEscaped}");
 #end
 #end
     }

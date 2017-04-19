@@ -54,26 +54,29 @@ public abstract class ID extends AbstractTextPrimitive {
     
     /**
      * @param theMessage message to which this Type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public ID(Message theMessage) {
-        super(theMessage);
+    public ID(Message theMessage, String friendlyName) {
+        super(theMessage, friendlyName);
     }
 
     /**
      * @param theMessage message to which this Type belongs
-     * @param theTable HL7 table from which values are to be drawn 
+     * @param theTable HL7 table from which values are to be drawn
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address") 
      */
-    public ID(Message theMessage, int theTable) {
-        super(theMessage);
+    public ID(Message theMessage, int theTable, String friendlyName) {
+        super(theMessage, friendlyName);
         myTable = theTable;
     }
     
     /**
      * @param message message to which this Type belongs
-     * @param theTable HL7 table from which values are to be drawn 
+     * @param theTable HL7 table from which values are to be drawn
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address") 
      */
-    public ID(Message message, Integer theTable) {
-        super(message);
+    public ID(Message message, Integer theTable, String friendlyName) {
+        super(message, friendlyName);
         myTable = theTable;
     }
     

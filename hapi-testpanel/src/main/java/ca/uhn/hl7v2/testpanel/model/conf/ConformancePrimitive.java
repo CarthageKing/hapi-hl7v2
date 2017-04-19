@@ -39,7 +39,7 @@ public class ConformancePrimitive extends AbstractPrimitive implements Primitive
 	private AbstractComponent myConfDefinition;
 
 	public ConformancePrimitive(ConformanceMessage theMessage, AbstractComponent theConfDefinition) {
-		super(theMessage);
+		super(theMessage, null);
 		
 		myConfDefinition = theConfDefinition;
 	}

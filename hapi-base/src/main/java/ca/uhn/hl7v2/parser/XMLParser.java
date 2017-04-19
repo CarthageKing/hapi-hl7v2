@@ -384,11 +384,11 @@ public abstract class XMLParser extends Parser {
 		// short nodeType = datatypeElement.getFirstChild().getNodeType();
 		if (!hasChildElement(datatypeElement)) {
 			// it's a primitive
-			datatypeObject.setData(new GenericPrimitive(datatypeObject.getMessage()));
+			datatypeObject.setData(new GenericPrimitive(datatypeObject.getMessage(), null));
 		} else {
 			// it's a composite ... almost know what type, except that we don't have the version
 			// here
-			datatypeObject.setData(new GenericComposite(datatypeObject.getMessage()));
+			datatypeObject.setData(new GenericComposite(datatypeObject.getMessage(), null));
 		}
 		parse(datatypeObject.getData(), datatypeElement);
 	}

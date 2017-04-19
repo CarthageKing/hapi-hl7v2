@@ -399,6 +399,11 @@ public final class Unmodifiable {
         public String getName() {
             return getDelegate().getName();
         }
+        
+        @Override
+        public String getFriendlyName() {
+            return getDelegate().getFriendlyName();
+        }
 
         public ExtraComponents getExtraComponents() {
             return unmodifiableExtraComponents(getDelegate().getExtraComponents());

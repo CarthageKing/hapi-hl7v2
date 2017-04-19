@@ -44,20 +44,28 @@ public abstract class AbstractType implements Type {
 	
 	private final ExtraComponents extra;
     private final Message message;
+    private final String friendlyName;
     
     /** 
      * Creates a new instance of AbstractType
-     * @param message message to which this type belongs 
+     * @param message message to which this type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public AbstractType(Message message) {
+    public AbstractType(Message message, String friendlyName) {
         extra = new ExtraComponents(message);
         this.message = message;
+        this.friendlyName = friendlyName;
     }
     
     /** Returns the name of the type (used in XML encoding and profile checking)  */
     public String getName() {
         String longClassName = this.getClass().getName();
         return longClassName.substring(longClassName.lastIndexOf('.') + 1);
+    }
+    
+    /** Returns the friendly name of the type (e.g. friendly name of AD-1 is "Street Address") */
+    public String getFriendlyName() {
+        return friendlyName;
     }
     
     /** @see Type#getExtraComponents */

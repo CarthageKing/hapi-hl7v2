@@ -47,9 +47,10 @@ public abstract class AbstractPrimitive extends AbstractType implements Primitiv
     
     /**
      * @param message message to which this type belongs
+     * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
-    public AbstractPrimitive(Message message) {
-        super(message);
+    public AbstractPrimitive(Message message, String friendlyName) {
+        super(message, friendlyName);
     }
 
     private String myValue;
