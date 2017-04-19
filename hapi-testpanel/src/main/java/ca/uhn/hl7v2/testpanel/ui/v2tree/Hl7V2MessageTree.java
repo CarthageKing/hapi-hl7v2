@@ -504,7 +504,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			theComponentPath.set(cpIndex, Integer.valueOf(i + 1));
 			String terserPath = theTerserPath + "-" + (i + 1);
 
-			index = addChildren(nextParentName, treeParent, false, false, null, i, nextType, theSegment, theComponentPath, index, terserPath);
+			index = addChildren(nextParentName, treeParent, false, false, nextType.getFriendlyName(), i, nextType, theSegment, theComponentPath, index, terserPath);
 		}
 
 		index = addChidrenExtra(theParentName, messParent, treeParent, theSegment, theComponentPath, theTerserPath, cpIndex, index);
