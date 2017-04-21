@@ -30,6 +30,7 @@ package ca.uhn.hl7v2.mvnplugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +44,7 @@ import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.database.NormativeDatabase;
 import ca.uhn.hl7v2.sourcegen.EventMapGenerator;
 import ca.uhn.hl7v2.sourcegen.SourceGenerator;
+import net.ucanaccess.jdbc.UcanaccessDriver;
 
 /**
  * Maven Plugin Mojo for generating HAPI HL7 message/segment/etc source files
@@ -177,6 +179,12 @@ public class SourceGenMojo extends AbstractMojo
            System.setProperty(NormativeDatabase.PROP_DATABASE_URL, jdbcUrl);
             
             try {
+                boolean isUsingUCanAccess = Boolean.valueOf(System.getProperty("msaccess.use-ucanaccess", null));
+                if (!isUsingUCanAccess) {
+                    Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                } else {
+                    DriverManager.registerDriver(new UcanaccessDriver());
+                }
 				EventMapGenerator.generateEventMap(targetResourceDirectory, version);
 				String targetDir = structuresAsResources ? targetResourceDirectory : targetDirectory;
                 SourceGenerator.makeAll(targetDir, version, false, templatePackage, "java");
@@ -186,6 +194,11 @@ public class SourceGenMojo extends AbstractMojo
 				throw new MojoExecutionException("Failed to build source ", e);
 			} catch (IOException e) {
 				throw new MojoExecutionException("Failed to build source ", e);
+			} catch (ClassNotFoundException e) {
+			    throw new MojoExecutionException("Failed to build source ", e);
+            } finally {
+			    NormativeDatabase.getInstance().shutdownConnection();
+			    getLog().info("Shutdown connection to NormativeDatabase");
 			}
             
         } else {

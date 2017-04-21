@@ -142,18 +142,28 @@ public class MessageGenerator extends Object {
 	 * with different versions. The fields returned are as follows:
 	 * segment_code, repetitional, optional, description
 	 */
-	private static String getSegmentListQuery(String message, String version) {
-		String sql = null;
+    private static String getSegmentListQuery(String message, String version) {
+        boolean isUsingUCanAccess = Boolean.valueOf(System.getProperty("msaccess.use-ucanaccess", null));
+        String sql = null;
 
-		sql = "SELECT HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname " + "FROM HL7Versions RIGHT JOIN (HL7Segments INNER JOIN HL7EventMessageTypeSegments ON (HL7Segments.version_id = HL7EventMessageTypeSegments.version_id) "
-				+ "AND (HL7Segments.seg_code = HL7EventMessageTypeSegments.seg_code)) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "WHERE (((HL7Versions.hl7_version)= '" + version + "') "
-				// ACCESS + "AND (([message_type]+'_'+[event_code])='"
-				+ "AND ((message_type + '_' + event_code)='" + message + "')) order by seq_no UNION "
-				// + "')) UNION "
-				+ "select HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname  " + "from HL7Versions RIGHT JOIN (HL7MsgStructIDSegments inner join HL7Segments on HL7MsgStructIDSegments.seg_code = HL7Segments.seg_code "
-				+ "and HL7MsgStructIDSegments.version_id = HL7Segments.version_id) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "where HL7Versions.hl7_version = '" + version + "' and message_structure = '" + message + "' order by seq_no";
-		return sql;
-	}
+        if (!isUsingUCanAccess) {
+            sql = "SELECT HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname " + "FROM HL7Versions RIGHT JOIN (HL7Segments INNER JOIN HL7EventMessageTypeSegments ON (HL7Segments.version_id = HL7EventMessageTypeSegments.version_id) "
+                + "AND (HL7Segments.seg_code = HL7EventMessageTypeSegments.seg_code)) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "WHERE (((HL7Versions.hl7_version)= '" + version + "') "
+                // ACCESS + "AND (([message_type]+'_'+[event_code])='"
+                + "AND ((message_type + '_' + event_code)='" + message + "')) order by seq_no UNION "
+                // + "')) UNION "
+                + "select HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname  " + "from HL7Versions RIGHT JOIN (HL7MsgStructIDSegments inner join HL7Segments on HL7MsgStructIDSegments.seg_code = HL7Segments.seg_code "
+                + "and HL7MsgStructIDSegments.version_id = HL7Segments.version_id) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "where HL7Versions.hl7_version = '" + version + "' and message_structure = '" + message + "' order by seq_no";
+        } else {
+            sql = "select * from (SELECT HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname " + "FROM HL7Versions RIGHT JOIN (HL7Segments INNER JOIN HL7EventMessageTypeSegments ON (HL7Segments.version_id = HL7EventMessageTypeSegments.version_id) "
+                + "AND (HL7Segments.seg_code = HL7EventMessageTypeSegments.seg_code)) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "WHERE (((HL7Versions.hl7_version)= '" + version + "') "
+                + "AND ((message_type + '_' + event_code)='" + message + "')) UNION "
+                + "select HL7Segments.seg_code, repetitional, optional, HL7Segments.description, seq_no, groupname  " + "from HL7Versions RIGHT JOIN (HL7MsgStructIDSegments inner join HL7Segments on HL7MsgStructIDSegments.seg_code = HL7Segments.seg_code "
+                + "and HL7MsgStructIDSegments.version_id = HL7Segments.version_id) " + "ON HL7Segments.version_id = HL7Versions.version_id " + "where HL7Versions.hl7_version = '" + version + "' and message_structure = '" + message + "') order by seq_no";
+        }
+        //System.err.println("The segment list sql: " + sql);
+        return sql;
+    }
 
 	/**
 	 * Queries the normative database for a list of segments comprising the
