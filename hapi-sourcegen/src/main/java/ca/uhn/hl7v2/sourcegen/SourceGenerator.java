@@ -31,8 +31,11 @@ package ca.uhn.hl7v2.sourcegen;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.IOException;
+import java.sql.DriverManager;
 
 import ca.uhn.hl7v2.HL7Exception;
+import net.ucanaccess.jdbc.UcanaccessDriver;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -62,7 +65,12 @@ public class SourceGenerator extends Object {
         }*/
         
         try {
-            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            boolean isUsingUCanAccess = Boolean.valueOf(System.getProperty("msaccess.use-ucanaccess", null));
+            if (!isUsingUCanAccess) {
+                Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+            } else {
+                DriverManager.registerDriver(new UcanaccessDriver());
+            }
             MessageGenerator.makeAll(baseDirectory, version, failOnError, theTemplatePackage, theFileExt);
             SegmentGenerator.makeAll(baseDirectory, version, theTemplatePackage, theFileExt);
             DataTypeGenerator.makeAll(baseDirectory, version, theTemplatePackage, theFileExt);

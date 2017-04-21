@@ -698,6 +698,44 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>ACCESS_UCANACCESS</id>
+			<properties>
+				<sourcegen.jdbcUrl.old>jdbc:ucanaccess:///tmp/hl7_72_HQ.mdb;memory=false;keepMirror=/tmp/hl7_72_hq_mirror;immediatelyReleaseResources=true</sourcegen.jdbcUrl.old>
+				<sourcegen.jdbcUser.old />
+				<sourcegen.jdbcPassword.old />
+				<sourcegen.jdbcUrl.new>jdbc:ucanaccess:///tmp/hl7_72_HQ.mdb;memory=false;keepMirror=/tmp/hl7_72_hq_mirror;immediatelyReleaseResources=true</sourcegen.jdbcUrl.new>
+				<sourcegen.jdbcUser.new />
+				<sourcegen.jdbcPassword.new />
+				<sourcegen.jdbcUrl.27>jdbc:ucanaccess:///tmp/hl7_72_HQ.mdb;memory=false;keepMirror=/tmp/hl7_72_hq_mirror;immediatelyReleaseResources=true</sourcegen.jdbcUrl.27>
+				<sourcegen.jdbcUser.27 />
+				<sourcegen.jdbcPassword.27 />
+				<sourcegen.jdbcUrl.28>jdbc:ucanaccess:///tmp/hl7_72_HQ.mdb;memory=false;keepMirror=/tmp/hl7_72_hq_mirror;immediatelyReleaseResources=true</sourcegen.jdbcUrl.28>
+				<sourcegen.jdbcUser.28 />
+				<sourcegen.jdbcPassword.28 />
+			</properties>
+			<build>
+				<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>properties-maven-plugin</artifactId>
+					<version>1.0.0</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>set-system-properties</goal>
+							</goals>
+							<configuration>
+								<properties>
+									<msaccess.use-ucanaccess>true</msaccess.use-ucanaccess>
+								</properties>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>ALLMODULES</id>
 			<modules>
 				<module>hapi-base</module>

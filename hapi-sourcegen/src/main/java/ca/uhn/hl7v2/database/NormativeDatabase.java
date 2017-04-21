@@ -94,7 +94,7 @@ public class NormativeDatabase
     /**
      * Returns the singleton instance of NormativeDatabase.
      */
-    public static NormativeDatabase getInstance() throws SQLException {
+    public static NormativeDatabase getInstance() {
     	return INSTANCE;
     }
 
@@ -131,8 +131,20 @@ public class NormativeDatabase
      * Used to return an HL7 normative database connection to the connection pool. If the given
      * connection is not in fact a connection to the normative database, it is discarded.
      */
-    public void returnConnection(Connection conn) {
+    public synchronized void returnConnection(Connection conn) {
     	checkedOut = null;
+    }
+    
+    public synchronized void shutdownConnection() {
+        if (null != connection) {
+            try {
+                connection.close();
+            } catch (Exception e) {
+                // do nothing
+            } finally {
+                connection = null;
+            }
+        }
     }
 
 
