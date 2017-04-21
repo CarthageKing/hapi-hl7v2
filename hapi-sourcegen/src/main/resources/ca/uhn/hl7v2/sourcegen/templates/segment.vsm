@@ -97,12 +97,12 @@ public class ${segmentName} extends AbstractSegment {
       #set ($rept = "false")
     #end
     #if (!${element.idType})
-      #set ($constructorArgs = "new Object[]{ getMessage(), (String) null }")
+      #set ($constructorArgs = "new Object[]{ getMessage(), ""${element.descEscaped}"" }")
     #else
       #if (${element.hasTableNamespace})
-        #set ($constructorArgs = "new Object[]{ getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer(${element.table}), (String) null }")
+        #set ($constructorArgs = "new Object[]{ getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer(${element.table}), ""${element.descEscaped}"" }")
       #else
-        #set ($constructorArgs = "new Object[]{ getMessage(), new Integer(${element.table}), (String) null }")
+        #set ($constructorArgs = "new Object[]{ getMessage(), new Integer(${element.table}), ""${element.descEscaped}"" }")
       #end
     #end
           this.add(${element.alternateType}.class, $reqd, ${element.repetitions}, ${element.length}, ${constructorArgs}, "${element.descEscaped}");
@@ -258,11 +258,11 @@ public class ${segmentName} extends AbstractSegment {
 #if ( $element.alternateType == "Varies" )
           case ${idx}: return new Varies(getMessage(), null);
 #elseif ( $element.idType && $element.hasTableNamespace)
-          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), null /* TODO */);
+          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), "${element.descEscaped}");
 #elseif ( $element.idType )
-          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), null /* TODO */);
+          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), "${element.descEscaped}");
 #else
-          case ${idx}: return new ${element.alternateType}(getMessage(), null /* TODO */);
+          case ${idx}: return new ${element.alternateType}(getMessage(), "${element.descEscaped}");
 #end
 #end       
           default: return null;

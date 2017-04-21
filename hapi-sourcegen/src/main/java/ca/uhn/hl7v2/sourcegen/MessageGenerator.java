@@ -115,6 +115,7 @@ public class MessageGenerator extends Object {
 		Connection conn = normativeDatabase.getConnection();
 		Statement stmt = conn.createStatement();
 		String sql = getMessageListQuery(theVersion);
+		//System.err.println("messages sql: " + sql);
 		ResultSet rs = stmt.executeQuery(sql);
 		ArrayList<String> messages = new ArrayList<String>();
 		ArrayList<String> chapters = new ArrayList<String>();
@@ -128,10 +129,44 @@ public class MessageGenerator extends Object {
 		}
 		stmt.close();
 		normativeDatabase.returnConnection(conn);
+		
+		ArrayList<String> msgFriendlyNames = new ArrayList<String>();
+		
+		for (String msg : messages) {
+		    conn = normativeDatabase.getConnection();
+	        stmt = conn.createStatement();
+	        // Get the event type names
+	        String[] parts = msg.split("_");
+            boolean found = false;
+            if (parts.length < 2) {
+                if ("ACK".equals(msg) || "QRY".equals(msg)) {
+                    // skip this
+                } else {
+                    log.warn("Unparseable msg type: {}", msg);
+                    throw new RuntimeException();
+                }
+            } else {
+                String eventType = parts[1];
+                sql = "select HL7Events.event_code, HL7Events.description from HL7Events left join HL7Versions on HL7Events.version_id=HL7Versions.version_id where HL7Versions.hl7_version='" + theVersion + "' and HL7Events.event_code='" + eventType + "'";
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    String desc = rs.getString(2);
+                    msgFriendlyNames.add(desc);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                msgFriendlyNames.add(null);
+            }
+            stmt.close();
+            normativeDatabase.returnConnection(conn);
+		}
 
 		MessageListAndChapterList retVal = new MessageListAndChapterList();
 		retVal.chapters = chapters;
 		retVal.messages = messages;
+		retVal.msgFriendlyNames = msgFriendlyNames;
 
 		return retVal;
 	}
@@ -238,7 +273,7 @@ public class MessageGenerator extends Object {
 	 * the specified directory. throws IllegalArgumentException if there is no
 	 * message structure for this message in the normative database
 	 */
-	public static void make(String message, String baseDirectory, String chapter, String version, String theTemplatePackage, String theFileExt) throws Exception {
+	public static void make(String message, String baseDirectory, String chapter, String version, String description, String theTemplatePackage, String theFileExt) throws Exception {
 
 		// Make sure this structure has a corresponding definition in the
 		// structure map
@@ -258,10 +293,11 @@ public class MessageGenerator extends Object {
 				baseDirectory = baseDirectory + "/";
 			}
 			File targetDir = determineTargetDir(baseDirectory, version);
-			System.out.println("Writing " + message + " to " + targetDir.getPath());
+			log.info("Writing {} {} to {}", message, description, targetDir.getPath());
+			//System.out.println("Writing " + message + " to " + targetDir.getPath());
 			String fileName = targetDir.getPath() + "/" + message + "." + theFileExt;
 
-			writeMessage(fileName, contents, message, chapter, version, DefaultModelClassFactory.getVersionPackageName(version), true, theTemplatePackage, null);
+			writeMessage(fileName, contents, message, chapter, version, description, DefaultModelClassFactory.getVersionPackageName(version), true, theTemplatePackage, null);
 
 		} catch (SQLException e) {
 			throw new HL7Exception(e);
@@ -301,7 +337,7 @@ public class MessageGenerator extends Object {
 			}
 
 			try {
-				make(message, baseDirectory, (String) chapters.get(i), version, theTemplatePackage, theFileExt);
+				make(message, baseDirectory, (String) chapters.get(i), version, mac.msgFriendlyNames.get(i), theTemplatePackage, theFileExt);
 			} catch (HL7Exception e) {
 				if (failOnError) {
 					throw e;
@@ -387,7 +423,7 @@ public class MessageGenerator extends Object {
 	 *            Only required for superstructure generation
 	 * @throws Exception
 	 */
-	public static void writeMessage(String fileName, StructureDef[] contents, String message, String chapter, String version, String basePackageName, boolean haveGroups, String theTemplatePackage, Map<String, List<String>> theStructureNameToChildNames) throws Exception {
+	public static void writeMessage(String fileName, StructureDef[] contents, String message, String chapter, String version, String description, String basePackageName, boolean haveGroups, String theTemplatePackage, Map<String, List<String>> theStructureNameToChildNames) throws Exception {
 
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName, false), SourceGenerator.ENCODING));
 
@@ -417,6 +453,11 @@ public class MessageGenerator extends Object {
 		Template template = VelocityFactory.getClasspathTemplateInstance(template2);
 		Context ctx = new VelocityContext();
 		ctx.put("message", message);
+        if (null != description) {
+            ctx.put("msgFriendlyName", description.replace("\"", "\\\""));
+        } else {
+            ctx.put("msgFriendlyName", null);
+        }
 		ctx.put("specVersion", version);
 		ctx.put("chapter", chapter);
 		ctx.put("haveGroups", haveGroups);
@@ -433,6 +474,7 @@ public class MessageGenerator extends Object {
 	public static class MessageListAndChapterList {
 		ArrayList<String> chapters;
 		ArrayList<String> messages;
+		ArrayList<String> msgFriendlyNames;
 	}
 
 }

@@ -103,7 +103,7 @@ public class $groupName extends AbstractGroup {
     #else
       #set ($chc = "false")
     #end
-          this.add(${group.name}.class, $reqd, $rept, $chc);
+          this.add(${group.name}.class, $reqd, $rept, $chc, "${group.descriptionEscaped}");
 #end
        } catch(HL7Exception e) {
           log.error("Unexpected error creating $groupName - this is probably a bug in the source code generator.", e);

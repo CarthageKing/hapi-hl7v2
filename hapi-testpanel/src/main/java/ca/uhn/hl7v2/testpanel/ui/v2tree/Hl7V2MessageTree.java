@@ -314,6 +314,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 	void addChildren(Group messParent, TreeNodeBase treeParent, String theTerserPath) throws InterruptedException, InvocationTargetException {
 
 		String[] childNames = messParent.getNames();
+        String[] childFriendlyNames = messParent.getFriendlyNames();
 		int currChild = 0;
 		for (int i = 0; i < childNames.length; i++) {
 
@@ -349,9 +350,9 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 					if (nextStructure instanceof Group) {
 
 						if (nextStructure instanceof ConformanceGroup) {
-							newNode = new TreeNodeGroupConf((ConformanceGroup) nextStructure, groupName, j, repeating, required, nextTerserPath);
+							newNode = new TreeNodeGroupConf((ConformanceGroup) nextStructure, groupName, null, j, repeating, required, nextTerserPath);
 						} else {
-							newNode = new TreeNodeGroup((Group) nextStructure, groupName, j, repeating, required, nextTerserPath);
+							newNode = new TreeNodeGroup((Group) nextStructure, groupName, childFriendlyNames[i], j, repeating, required, nextTerserPath);
 						}
 
 						addChildren((Group) nextStructure, newNode, nextTerserPath);
@@ -361,9 +362,9 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 					} else if (nextStructure instanceof Segment) {
 
 						if (nextStructure instanceof ConformanceSegment) {
-							newNode = new TreeNodeSegmentConf((ConformanceSegment) nextStructure, groupName, j, repeating, required, nextTerserPath);
+							newNode = new TreeNodeSegmentConf((ConformanceSegment) nextStructure, groupName, null, j, repeating, required, nextTerserPath);
 						} else {
-							newNode = new TreeNodeSegment((Segment) nextStructure, groupName, j, repeating, required, nextTerserPath);
+							newNode = new TreeNodeSegment((Segment) nextStructure, groupName, childFriendlyNames[i], j, repeating, required, nextTerserPath);
 						}
 
 						addChildren((Segment) nextStructure, newNode, nextTerserPath);
@@ -523,9 +524,9 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			Composite composite = (Composite) theType;
 			TreeNodeType newNode;
 			if (composite instanceof ConformanceComposite) {
-				newNode = new TreeNodeCompositeConf(theParentName, composite, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+				newNode = new TreeNodeCompositeConf(theParentName, composite, theName, null, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			} else {
-				newNode = new TreeNodeType(theParentName, composite, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+				newNode = new TreeNodeType(theParentName, composite, theName, composite.getFriendlyName(), theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			}
 
 			addChildren(theParentName, composite, newNode, theParent, theComponentNumbers, theTerserPath);
@@ -537,12 +538,12 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			Primitive primitive = (Primitive) theType;
 			TreeNodeType newNode;
 			if (primitive instanceof ConformancePrimitive) {
-				newNode = new TreeNodePrimitiveConf(theParentName, (ConformancePrimitive) primitive, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+				newNode = new TreeNodePrimitiveConf(theParentName, (ConformancePrimitive) primitive, theName, null, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			} else {
 			    if (null == theName) {
 			        theName = primitive.getFriendlyName();
 			    }
-				newNode = new TreeNodePrimitive(theParentName, primitive, theName, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+				newNode = new TreeNodePrimitive(theParentName, primitive, theName, primitive.getFriendlyName(), theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			}
 
 			addChidrenExtra(theParentName, primitive, newNode, theParent, theComponentNumbers, theTerserPath, theComponentNumbers.size(), 0);
@@ -1073,6 +1074,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		private String myErrorDescription;
 		private Boolean myHasContent;
 		private final String myName;
+		private final String myFriendlyName;
 		private final Boolean myRepeating;
 		private final int myRepNum;
 		private final Boolean myRequired;
@@ -1084,22 +1086,24 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			assert theStructure != null || this instanceof TreeNodeRoot;
 
 			myName = null;
+			myFriendlyName = null;
 			myTerserPath = null;
 			myRepNum = 0;
 			myRepeating = null;
 			myRequired = null;
 		}
 
-		public TreeNodeBase(Object theStructure, String theName, int theRepNum, Boolean theRepeating, Boolean theRequired, String theTerserPath) {
-			super(theStructure);
-			assert theStructure != null;
+        public TreeNodeBase(Object theStructure, String theName, String theFriendlyName, int theRepNum, Boolean theRepeating, Boolean theRequired, String theTerserPath) {
+            super(theStructure);
+            assert theStructure != null;
 
-			myName = theName;
-			myRepNum = theRepNum;
-			myRepeating = theRepeating;
-			myRequired = theRequired;
-			myTerserPath = theTerserPath;
-		}
+            myName = theName;
+            myFriendlyName = theFriendlyName;
+            myRepNum = theRepNum;
+            myRepeating = theRepeating;
+            myRequired = theRequired;
+            myTerserPath = theTerserPath;
+        }
 
 		public void addValidationExceptions(List<HL7Exception> theProblems) {
 			addValidationExceptions(theProblems.toArray(new HL7Exception[theProblems.size()]));
@@ -1190,6 +1194,10 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		public String getName() {
 			return myName;
 		}
+		
+		public String getFriendlyName() {
+		    return myFriendlyName;
+		}
 
 		public StringBuilder getNodeText() {
 			StringBuilder b = new StringBuilder();
@@ -1197,6 +1205,10 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			b.append("<font color=\"" + getNodeTextColor() + "\">");
 			b.append(myName);
 			b.append("</font>");
+			
+			if (StringUtils.isNotBlank(getFriendlyName())) {
+			    b.append(" ").append(getFriendlyName());
+			}
 
 			if (myRepeating != null && myRepeating && (myShowRep0 || getRepNum() > 0)) {
 				b.append("<font color=\"" + COLOR_REPNUM + "\">");
@@ -1392,8 +1404,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	public class TreeNodeCompositeConf extends TreeNodeType {
 
-		public TreeNodeCompositeConf(String theParentName, Type theComposite, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
-			super(theParentName, theComposite, theGroupName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
+		public TreeNodeCompositeConf(String theParentName, Type theComposite, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
+			super(theParentName, theComposite, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
 		}
 
 		@Override
@@ -1442,8 +1454,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	public class TreeNodeGroup extends TreeNodeGroupBase {
 
-		public TreeNodeGroup(Group theGroup, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
-			super(theGroup, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeGroup(Group theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
+			super(theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 		}
 
 		private void addToSegList(List<Segment> retVal, Group group) throws HL7Exception {
@@ -1480,8 +1492,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 	}
 
 	public class TreeNodeGroupBase extends TreeNodeBase {
-		public TreeNodeGroupBase(Group theGroup, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
-			super(theGroup, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeGroupBase(Group theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
+			super(theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 		}
 
 		public TreeNodeGroupBase(Hl7V2MessageBase theMessage) {
@@ -1509,8 +1521,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	public class TreeNodeGroupConf extends TreeNodeGroup {
 
-		public TreeNodeGroupConf(ConformanceGroup theGroup, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
-			super(theGroup, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeGroupConf(ConformanceGroup theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
+			super(theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 		}
 
 		@Override
@@ -1618,8 +1630,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	public class TreeNodePrimitive extends TreeNodeType {
 
-		public TreeNodePrimitive(String theParentName, Primitive theGroup, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
-			super(theParentName, theGroup, theGroupName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
+		public TreeNodePrimitive(String theParentName, Primitive theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
+			super(theParentName, theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
 		}
 
 		/**
@@ -1719,8 +1731,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	public class TreeNodePrimitiveConf extends TreeNodePrimitive {
 
-		public TreeNodePrimitiveConf(String theParentName, ConformancePrimitive thePrimitive, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
-			super(theParentName, thePrimitive, theGroupName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
+		public TreeNodePrimitiveConf(String theParentName, ConformancePrimitive thePrimitive, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
+			super(theParentName, thePrimitive, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theParent, theComponentPath, theTerserPath);
 
 		}
 
@@ -1844,8 +1856,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 	}
 
 	public class TreeNodeSegment extends TreeNodeBase {
-		public TreeNodeSegment(Segment theSegment, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
-			super(theSegment, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeSegment(Segment theSegment, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
+			super(theSegment, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 
 			Validate.notNull(theTerserPath);
 			Validate.isTrue(theTerserPath.startsWith("/"));
@@ -1906,8 +1918,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 	}
 
 	public class TreeNodeSegmentConf extends TreeNodeSegment {
-		public TreeNodeSegmentConf(ConformanceSegment theSegment, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
-			super(theSegment, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeSegmentConf(ConformanceSegment theSegment, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, String theTerserPath) {
+			super(theSegment, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 		}
 
 		@Override
@@ -1958,8 +1970,8 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		private String myParentName;
 		private Segment mySegment;
 
-		public TreeNodeType(String theParentName, Type theGroup, String theGroupName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
-			super(theGroup, theGroupName, theRepNum, theRepeating, theRequired, theTerserPath);
+		public TreeNodeType(String theParentName, Type theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
+			super(theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
 
 			Validate.notNull(theParent);
 			Validate.notNull(theComponentPath);
@@ -1978,8 +1990,10 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			StringBuilder b = new StringBuilder();
 
 			b.append(myParentName);
-			b.append(" ");
-			b.append(getName());
+			
+            if (StringUtils.isNotBlank(getFriendlyName())) {
+                b.append(" ").append(getFriendlyName());
+            }
 
 			if (isRepeating() && (myShowRep0 || getRepNum() > 0)) {
 				b.append("<font color=\"" + COLOR_REPNUM + "\">");
@@ -2123,8 +2137,15 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		public String getDisplayName(Object theObject) {
 			if (theObject instanceof TreeNodeMessage) {
 
-				TreeNodeMessage tnm = (TreeNodeMessage) theObject;
-				return (tnm.getMessage().getMessageDescription());
+                TreeNodeMessage tnm = (TreeNodeMessage) theObject;
+                Message msg = tnm.getParsedMessage();
+                StringBuilder retVal = new StringBuilder();
+                String friendlyName = msg.getFriendlyName();
+                if (!StringUtils.isBlank(friendlyName)) {
+                    retVal.append("<b><font color=\"#000000\">").append(friendlyName).append("</font></b>:  ");
+                }
+
+                return (retVal.append(tnm.getMessage().getMessageDescription()).toString());
 
 			} else if (theObject instanceof TreeNodeBase) {
 

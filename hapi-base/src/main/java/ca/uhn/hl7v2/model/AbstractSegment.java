@@ -551,6 +551,10 @@ public abstract class AbstractSegment extends AbstractStructure implements
 	public String[] getNames() {
 		return names.toArray(new String[names.size()]);
 	}
+	
+	public String[] getFriendlyNames() {
+	    return getNames();
+	}
 
 	/**
 	 * {@inheritDoc }

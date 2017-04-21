@@ -199,6 +199,10 @@ public final class Unmodifiable {
         public String getName() {
             return getDelegate().getName();
         }
+        
+        public String getFriendlyName() {
+            return getDelegate().getFriendlyName();
+        }
 
         public Group getParent() {
             return unmodifiableStructure(getDelegate().getParent());
@@ -316,6 +320,10 @@ public final class Unmodifiable {
 
         public String[] getNames() {
             return getDelegate().getNames();
+        }
+        
+        public String[] getFriendlyNames() {
+            return getDelegate().getFriendlyNames();
         }
 
         public Class<? extends Structure> getClass(String name) {

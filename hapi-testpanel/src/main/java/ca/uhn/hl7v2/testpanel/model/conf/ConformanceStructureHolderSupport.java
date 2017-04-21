@@ -168,6 +168,14 @@ public class ConformanceStructureHolderSupport implements ConformanceStructureHo
 	public String[] getNames() {
 		return myNames.toArray(new String[myNames.size()]);
 	}
+	
+	public String[] getFriendlyNames() {
+	    return getNames();
+	}
+	
+	public String getFriendlyName() {
+	    return null;
+	}
 
 	/**
 	 * @return the namesToNonStandardSegments

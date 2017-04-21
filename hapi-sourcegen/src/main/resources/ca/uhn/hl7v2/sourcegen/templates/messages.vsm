@@ -108,7 +108,7 @@ public class $message extends $baseClass  {
     #else
       #set ($rept = "false")
     #end
-          this.add(${segment.name}.class, $reqd, $rept);
+          this.add(${segment.name}.class, $reqd, $rept, "${segment.descriptionEscaped}");
 	#foreach ( $nextStruct in $segment.getAssociatedStructures() )
           this.addSuperstructureApplication("$segment.indexName", "$nextStruct"); 
 	#end          
@@ -116,6 +116,14 @@ public class $message extends $baseClass  {
        } catch(HL7Exception e) {
           log.error("Unexpected error creating $message - this is probably a bug in the source code generator.", e);
        }
+    }
+
+    public String getFriendlyName() {
+#if ( !${msgFriendlyName} )
+        return null;
+#else
+        return "${msgFriendlyName}";
+#end
     }
 
 #if ( $haveAssociatedStructures == true )

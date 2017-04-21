@@ -130,6 +130,8 @@ public interface Group extends Structure {
    */
   public String[] getNames();
   
+  public String[] getFriendlyNames();
+  
   /**
    * Returns the Class of the Structure at the given name index.  
    * @param name name of the structure nested in this group

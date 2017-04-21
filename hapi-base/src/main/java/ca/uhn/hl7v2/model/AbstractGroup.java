@@ -58,6 +58,7 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
 	private static final long serialVersionUID = 1772720246448224363L;
 
     private List<String> names;
+    private List<String> friendlyNames;
     private Map<String, List<Structure>> structures;
     private Map<String, Boolean> required;
     private Map<String, Boolean> repeating;
@@ -85,6 +86,7 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
 
     private void init() {
         names = new ArrayList<String>();
+        friendlyNames = new ArrayList<String>();
         structures = new HashMap<String, List<Structure>>();
         required = new HashMap<String, Boolean>();
         repeating = new HashMap<String, Boolean>();
@@ -281,6 +283,14 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
         }
         return retVal;
     }
+    
+    public String[] getFriendlyNames() {
+        String[] retVal = new String[this.friendlyNames.size()];
+        for (int i = 0; i < this.friendlyNames.size(); i++) {
+            retVal[i] = this.friendlyNames.get(i);
+        }
+        return retVal;
+    }
 
     /**
      * Adds a new Structure (group or segment) to this Group. A place for the Structure is added to
@@ -296,6 +306,10 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
      */
     protected String add(Class<? extends Structure> c, boolean required, boolean repeating) throws HL7Exception {
     	return add(c, required, repeating, false);
+    }
+    
+    protected String add(Class<? extends Structure> c, boolean required, boolean repeating, String friendlyName) throws HL7Exception {
+        return add(c, required, repeating, false, friendlyName);
     }
 
     /**
@@ -314,6 +328,11 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
         String name = getName(c);
         return insert(c, required, repeating, choiceElement, this.names.size(), name);
 	}
+    
+    protected String add(Class<? extends Structure> c, boolean required, boolean repeating, boolean choiceElement, String friendlyName) throws HL7Exception {
+        String name = getName(c);
+        return insert(c, required, repeating, choiceElement, this.names.size(), name, friendlyName);
+    }
 
 	/**
      * Adds a new Structure (group or segment) to this Group. A place for the Structure is added to
@@ -618,11 +637,21 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
      */
     protected String insert(Class<? extends Structure> c, boolean required, boolean repeating, int index, String name)
             throws HL7Exception {
-    	return insert(c, required, repeating, false, index, name);
+    	return insert(c, required, repeating, false, index, name, null);
+    }
+    
+    protected String insert(Class<? extends Structure> c, boolean required, boolean repeating, int index, String name, String friendlyName)
+        throws HL7Exception {
+        return insert(c, required, repeating, false, index, name, friendlyName);
     }
 
     protected String insert(Class<? extends Structure> c, boolean required, boolean repeating, boolean choiceElement, 
-    		int index, String name) throws HL7Exception {
+        int index, String name) throws HL7Exception {
+        return insert(c, required, repeating, choiceElement, index, name, null);
+    }
+    
+    protected String insert(Class<? extends Structure> c, boolean required, boolean repeating, boolean choiceElement, 
+    		int index, String name, String friendlyName) throws HL7Exception {
         // tryToInstantiateStructure(c, name); //may throw exception
 
         // see if there is already something by this name and make a new name if
@@ -641,6 +670,7 @@ public abstract class AbstractGroup extends AbstractStructure implements Group {
         }
 
         this.names.add(index, name);
+        this.friendlyNames.add(index, friendlyName);
         this.required.put(name, required);
         this.repeating.put(name, repeating);
         this.classes.put(name, c);

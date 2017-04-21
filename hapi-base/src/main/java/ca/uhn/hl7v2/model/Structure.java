@@ -55,6 +55,8 @@ public interface Structure extends Serializable, Visitable {
    */
   public String getName(); 
   
+  public String getFriendlyName();
+  
   /**
    * Returns the parent group within which this structure exists (may be root 
    * message group).

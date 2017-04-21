@@ -118,6 +118,10 @@ public class SegmentDef implements StructureDef {
         return this.description;
     }
     
+    public String getDescriptionEscaped() {
+        return description.replace("\"", "\\\"");
+    }
+    
     /**
      * Returns a list of the names of the segments that are children of this Structure.
      * If the structure is a Segment, a 1-element array is returned containing the segment

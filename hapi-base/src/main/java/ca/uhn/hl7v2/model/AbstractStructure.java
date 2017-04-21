@@ -55,4 +55,7 @@ public abstract class AbstractStructure implements Structure {
 		return parent;
 	}
 
+	public String getFriendlyName() {
+	    return null;
+	}
 }

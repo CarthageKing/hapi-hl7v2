@@ -202,7 +202,7 @@ public class SuperStructureMojo extends AbstractMojo {
 
 			StructureDef[] contents = structures.toArray(new StructureDef[structures.size()]);
 			String basePackageName = DefaultModelClassFactory.getVersionPackageName(version);
-			MessageGenerator.writeMessage(fileName, contents, targetStructureName, "", version, basePackageName, haveGroups, templatePackage, mergedMessages.myStructureNameToChildNames);
+			MessageGenerator.writeMessage(fileName, contents, targetStructureName, "", version, null, basePackageName, haveGroups, templatePackage, mergedMessages.myStructureNameToChildNames);
 
 		} catch (Exception e) {
 			throw new MojoFailureException("Failed to generate structure", e);

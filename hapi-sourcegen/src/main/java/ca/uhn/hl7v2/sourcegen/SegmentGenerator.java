@@ -212,7 +212,7 @@ public class SegmentGenerator extends java.lang.Object {
 			sql.append(version);
 			sql.append("' ");
 			sql.append("ORDER BY HL7SegmentDataElements.seg_code, HL7SegmentDataElements.seq_no;");
-			//System.out.println(sql.toString());  //for debugging
+			//System.err.println(sql.toString());  //for debugging
 			
 			Statement stmt;
 			ResultSet rs;

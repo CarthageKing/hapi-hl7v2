@@ -116,7 +116,7 @@ public class DataTypeGenerator extends Object {
         Statement stmt = conn.createStatement();
         //get normal data types ... 
         String normalTypeQuery = "select data_type_code from HL7DataTypes, HL7Versions where HL7Versions.version_id = HL7DataTypes.version_id and HL7Versions.hl7_version = '" + version + "'";
-        System.err.println("normaldatatype query version '" + version + "': " + normalTypeQuery);
+        //System.err.println("normaldatatype query version '" + version + "': " + normalTypeQuery);
         ResultSet rs = stmt.executeQuery(normalTypeQuery);
         while (rs.next()) {
             types.add(rs.getString(1));
@@ -131,7 +131,7 @@ public class DataTypeGenerator extends Object {
             "data_type_code  = 'CN' or " + 
             "data_type_code  = 'CQ') and " +
         "HL7Versions.version_id = HL7DataStructures.version_id and  HL7Versions.hl7_version = '" + version + "'";
-        System.err.println("subdatatype query version '" + version + "': " + subtypeQuery);
+        //System.err.println("subdatatype query version '" + version + "': " + subtypeQuery);
        rs = stmt.executeQuery(subtypeQuery);
         while (rs.next()) {
             String string = rs.getString(1);
@@ -179,7 +179,7 @@ public class DataTypeGenerator extends Object {
         sql.append("' AND HL7Versions.hl7_version = '");
         sql.append(version);
         sql.append("' ORDER BY HL7DataStructureComponents.seq_no");
-        System.err.println("For datatype " + dataType + " version " + version + ": " + sql.toString());  //for debugging
+        //System.err.println("For datatype " + dataType + " version " + version + ": " + sql.toString());  //for debugging
         ResultSet rs = stmt.executeQuery(sql.toString());
         
         ArrayList<String> dataTypes = new ArrayList<String>(20);
@@ -213,7 +213,7 @@ public class DataTypeGenerator extends Object {
         //if there is only one component make a Primitive, otherwise make a Composite
         String source = null;
         if (dataTypes.size() == 1) {
-        	System.out.println("datatype "+dataType+" is a primitive");
+        	//System.out.println("datatype "+dataType+" is a primitive");
             if (ourMakeAll || dataType.equals("FT") || dataType.equals("ST") || dataType.equals("TX") 
                     || dataType.equals("NM") || dataType.equals("SI") || dataType.equals("TN")
                     || dataType.equals("GTS")
