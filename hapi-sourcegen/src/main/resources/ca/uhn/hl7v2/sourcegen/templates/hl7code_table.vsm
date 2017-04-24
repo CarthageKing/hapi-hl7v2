@@ -1,0 +1,91 @@
+/*
+ * This class is an auto-generated source file for a HAPI
+ * HL7 v2.x standard code table class.
+ *
+ * For more information, visit: http://hl7api.sourceforge.net/
+ * 
+ * The contents of this file are subject to the Mozilla Public License Version 1.1 
+ * (the "License"); you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at http://www.mozilla.org/MPL/ 
+ * Software distributed under the License is distributed on an "AS IS" basis, 
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the 
+ * specific language governing rights and limitations under the License. 
+ * 
+ * The Original Code is "[file_name]".  Description: 
+ * "[one_line_description]" 
+ * 
+ * The Initial Developer of the Original Code is Accenture LLP. Copyright (C) 
+ * 2017.  All Rights Reserved. 
+ * 
+ * Contributor(s): ______________________________________. 
+ * 
+ * Alternatively, the contents of this file may be used under the terms of the 
+ * GNU General Public License (the  "GPL"), in which case the provisions of the GPL are 
+ * applicable instead of those above.  If you wish to allow use of your version of this 
+ * file only under the terms of the GPL and not to allow others to use your version 
+ * of this file under the MPL, indicate your decision by deleting  the provisions above 
+ * and replace  them with the notice and other provisions required by the GPL License.  
+ * If you do not delete the provisions above, a recipient may use your version of 
+ * this file under either the MPL or the GPL. 
+ * 
+ */
+
+
+package ${basePackageName}table;
+
+public enum ${codeTable.className} implements ca.uhn.hl7v2.model.HL7V2Code {
+#set ( $numEntries = $codeTable.entries.size() )
+#set ( $counter = 0 )
+#foreach ( $entry in $codeTable.entries )
+
+    /**
+     * <p>${entry.description}</p>
+     */
+    ${entry.enumName}("${entry.code}", "${entry.descriptionJavaEscaped}")#if ( $counter < ($numEntries - 1)  ),#else;#end
+
+#set ( $counter = $counter + 1 )
+#end
+
+    /**
+     * Actual code for this concept.
+     */
+    private final String code;
+
+    /**
+     * Friendly name for this concept.
+     */
+    private final String description;
+
+    private ${codeTable.className}(String theCode, String theDescription) {
+        code = theCode;
+        description = theDescription;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getVersion() {
+        return "${codeTable.version}";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCodeSystemTableNumber() {
+        return "${codeTable.tableNumber}";
+    }
+
+    public String getCodeSystemOID() {
+#if ( $codeTable.oid )
+        return "${codeTable.oid}";
+#else
+        return null;
+#end
+    }
+
+    public String getCodeSystemName() {
+        return "${codeTable.name}";
+    }
+}

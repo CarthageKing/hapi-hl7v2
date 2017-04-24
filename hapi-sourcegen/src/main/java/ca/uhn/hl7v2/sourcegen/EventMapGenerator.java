@@ -116,7 +116,7 @@ public class EventMapGenerator {
 			String structure = rs.getString("message_structure_snd");
 
 			if (messages.contains(trigger)) {
-				ourLog.info("Skipping Eventmap for trigger {} because a structure exists!", trigger);
+				ourLog.debug("Skipping Eventmap for trigger {} because a structure exists!", trigger);
 				continue;
 			}
 

@@ -293,7 +293,7 @@ public class MessageGenerator extends Object {
 				baseDirectory = baseDirectory + "/";
 			}
 			File targetDir = determineTargetDir(baseDirectory, version);
-			log.info("Writing {} {} to {}", message, description, targetDir.getPath());
+			log.debug("Writing {} {} to {}", message, description, targetDir.getPath());
 			//System.out.println("Writing " + message + " to " + targetDir.getPath());
 			String fileName = targetDir.getPath() + "/" + message + "." + theFileExt;
 

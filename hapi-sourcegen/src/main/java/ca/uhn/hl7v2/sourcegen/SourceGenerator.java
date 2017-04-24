@@ -74,6 +74,7 @@ public class SourceGenerator extends Object {
             MessageGenerator.makeAll(baseDirectory, version, failOnError, theTemplatePackage, theFileExt);
             SegmentGenerator.makeAll(baseDirectory, version, theTemplatePackage, theFileExt);
             DataTypeGenerator.makeAll(baseDirectory, version, theTemplatePackage, theFileExt);
+            CodeTableGenerator.makeAll(baseDirectory, version, theTemplatePackage, theFileExt);
             // group and message not implemented
         } catch (Exception e) {
         	throw new HL7Exception(e);
