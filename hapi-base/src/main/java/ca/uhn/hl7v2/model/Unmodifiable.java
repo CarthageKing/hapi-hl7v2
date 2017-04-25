@@ -412,6 +412,11 @@ public final class Unmodifiable {
         public String getFriendlyName() {
             return getDelegate().getFriendlyName();
         }
+        
+        @Override
+        public Integer getMaxLength() {
+            return getDelegate().getMaxLength();
+        }
 
         public ExtraComponents getExtraComponents() {
             return unmodifiableExtraComponents(getDelegate().getExtraComponents());

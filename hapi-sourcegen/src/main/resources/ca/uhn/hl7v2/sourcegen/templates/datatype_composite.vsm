@@ -74,6 +74,11 @@ public class ${datatypeName} extends AbstractComposite {
 #else
         data[${idx}] = new ${component.type}(getMessage(), "${component.nameEscaped}");
 #end
+#if (${component.maxLength})
+        ((ca.uhn.hl7v2.model.AbstractType) data[${idx}]).setMaxLength(${component.maxLength});
+#else
+        ((ca.uhn.hl7v2.model.AbstractType) data[${idx}]).setMaxLength(null);
+#end
 #end
     }
 

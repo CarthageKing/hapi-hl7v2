@@ -143,6 +143,11 @@ public class Varies implements Variable {
         return name;
     }
 
+    @Override
+    public Integer getMaxLength() {
+        return null;
+    }
+
     /**
      * Sets the data contained by this instance of Varies.  If a data object already exists,
      * then its values are copied to the incoming data object before the old one is replaced.

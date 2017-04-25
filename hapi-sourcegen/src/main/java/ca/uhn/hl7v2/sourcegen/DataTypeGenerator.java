@@ -41,8 +41,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.Context;
@@ -167,7 +169,7 @@ public class DataTypeGenerator extends Object {
         StringBuffer sql = new StringBuffer();
         //this query is adapted from the XML SIG informative document
         sql.append("SELECT HL7DataStructures.data_structure, HL7DataStructureComponents.seq_no, HL7DataStructures.description, HL7DataStructureComponents.table_id,  ");
-        sql.append("HL7Components.description, HL7Components.table_id, HL7Components.data_type_code, HL7Components.data_structure ");
+        sql.append("HL7Components.description, HL7Components.table_id, HL7Components.data_type_code, HL7Components.data_structure, HL7DataStructureComponents.max_length ");
         sql.append("FROM HL7Versions LEFT JOIN (HL7DataStructures LEFT JOIN (HL7DataStructureComponents LEFT JOIN HL7Components ");
         sql.append("ON HL7DataStructureComponents.comp_no = HL7Components.comp_no AND ");
         sql.append("HL7DataStructureComponents.version_id = HL7Components.version_id) ");
@@ -179,12 +181,13 @@ public class DataTypeGenerator extends Object {
         sql.append("' AND HL7Versions.hl7_version = '");
         sql.append(version);
         sql.append("' ORDER BY HL7DataStructureComponents.seq_no");
-        //System.err.println("For datatype " + dataType + " version " + version + ": " + sql.toString());  //for debugging
+        log.debug("For datatype {} version {}: {}", dataType, version, sql.toString());
         ResultSet rs = stmt.executeQuery(sql.toString());
         
         ArrayList<String> dataTypes = new ArrayList<String>(20);
         ArrayList<String> descriptions = new ArrayList<String>(20);
         ArrayList<Integer> tables = new ArrayList<Integer>(20);
+        List<Integer> maxLengths = new ArrayList<Integer>();
         String description = null;
         while (rs.next()) {
             if (description == null) description = rs.getString(3);
@@ -206,6 +209,14 @@ public class DataTypeGenerator extends Object {
             dataTypes.add(dt);
             descriptions.add(de);
             tables.add(new Integer(ta));
+            {
+                String tmp = StringUtils.trimToNull(rs.getString(9));
+                if (null != tmp) {
+                    maxLengths.add(Integer.parseInt(tmp));       
+                } else {
+                    maxLengths.add(null);
+                }
+            }
         }
         stmt.close();
         normativeDatabase.returnConnection(conn);
@@ -238,7 +249,7 @@ public class DataTypeGenerator extends Object {
                 source = null; //note: IS, ID, DT, DTM, and TM are coded manually
             }
         } else if (dataTypes.size() > 1) {
-        	//System.out.println("datatype "+dataType+" is a composite");
+            log.debug("Datatype {} is a composite", dataType);
             int numComponents = dataTypes.size();
             //copy data into arrays ... 
             String[] type = new String[numComponents];
@@ -267,6 +278,7 @@ public class DataTypeGenerator extends Object {
                 typeName = SourceGenerator.getAlternateType(typeName, version);
                 
                 componentDefs[i] = new DatatypeComponentDef(dataType, i, typeName, componentName, ((Integer) tables.get(i)).intValue());
+                componentDefs[i].setMaxLength(maxLengths.get(i));
             }
             
             source = makeComposite(dataType, description, componentDefs, type, desc, table, version, basePackage, theTemplatePackage);

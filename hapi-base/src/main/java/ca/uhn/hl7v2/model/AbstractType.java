@@ -45,6 +45,7 @@ public abstract class AbstractType implements Type {
 	private final ExtraComponents extra;
     private final Message message;
     private final String friendlyName;
+    private Integer maxLength;
     
     /** 
      * Creates a new instance of AbstractType
@@ -79,6 +80,15 @@ public abstract class AbstractType implements Type {
      */
     public Message getMessage() {
         return message;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    @Override
+    public Integer getMaxLength() {
+        return maxLength;
     }
 
 

@@ -51,6 +51,13 @@ public interface Type extends Serializable, Visitable {
     public String getFriendlyName();
     
     /**
+     * Returns the max length of the type if it is defined.
+     *
+     * @return max length of the type if it is defined.
+     */
+    public Integer getMaxLength();
+    
+    /**
      * Returns an object containing any extra (non-standard) components that 
      * have been added to this type at run-time.  This object can also be used
      * to add components.

@@ -240,7 +240,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			// theComponentPath.set(cpIndex, Integer.valueOf(i + 1));
 			String terserPath = theTerserPath + "-" + (i + 1);
 
-			index = addChildren(nextParentName, treeParent, false, false, null, i, nextType, theSegment, theComponentPath, index, terserPath);
+			index = addChildren(nextParentName, treeParent, false, false, null, i, nextType, theSegment, theComponentPath, index, terserPath, nextType.getMaxLength());
 		}
 		return index;
 	}
@@ -477,7 +477,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 					}
 					String terserPath = b.toString();
 
-					index = addChildren(parentName, treeParent, repeating, required, name, j, type, messParent, components, index, terserPath);
+					index = addChildren(parentName, treeParent, repeating, required, name, j, type, messParent, components, index, terserPath, messParent.getLength(i));
 
 				}
 
@@ -505,7 +505,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			theComponentPath.set(cpIndex, Integer.valueOf(i + 1));
 			String terserPath = theTerserPath + "-" + (i + 1);
 
-			index = addChildren(nextParentName, treeParent, false, false, nextType.getFriendlyName(), i, nextType, theSegment, theComponentPath, index, terserPath);
+			index = addChildren(nextParentName, treeParent, false, false, nextType.getFriendlyName(), i, nextType, theSegment, theComponentPath, index, terserPath, nextType.getMaxLength());
 		}
 
 		index = addChidrenExtra(theParentName, messParent, treeParent, theSegment, theComponentPath, theTerserPath, cpIndex, index);
@@ -514,7 +514,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 
 	}
 
-	int addChildren(String theParentName, TreeNodeBase theTreeParent, boolean theRepeating, boolean theRequired, String theName, int theRepNum, Type theType, Segment theParent, List<Integer> theComponentNumbers, int theIndex, String theTerserPath) throws InterruptedException,
+	int addChildren(String theParentName, TreeNodeBase theTreeParent, boolean theRepeating, boolean theRequired, String theName, int theRepNum, Type theType, Segment theParent, List<Integer> theComponentNumbers, int theIndex, String theTerserPath, Integer theLength) throws InterruptedException,
 			InvocationTargetException {
 		if (theType instanceof Varies) {
 			theType = ((Varies) theType).getData();
@@ -527,6 +527,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 				newNode = new TreeNodeCompositeConf(theParentName, composite, theName, null, theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
 			} else {
 				newNode = new TreeNodeType(theParentName, composite, theName, composite.getFriendlyName(), theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+				newNode.setMaxLength(theLength);
 			}
 
 			addChildren(theParentName, composite, newNode, theParent, theComponentNumbers, theTerserPath);
@@ -544,6 +545,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			        theName = primitive.getFriendlyName();
 			    }
 				newNode = new TreeNodePrimitive(theParentName, primitive, theName, primitive.getFriendlyName(), theRepNum, theRepeating, theRequired, theParent, theComponentNumbers, theTerserPath);
+                newNode.setMaxLength(theLength);
 			}
 
 			addChidrenExtra(theParentName, primitive, newNode, theParent, theComponentNumbers, theTerserPath, theComponentNumbers.size(), 0);
@@ -1969,6 +1971,7 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 		private ArrayList<Integer> myComponentPath;
 		private String myParentName;
 		private Segment mySegment;
+		private Integer myLength;
 
 		public TreeNodeType(String theParentName, Type theGroup, String theGroupName, String theFriendlyName, int theRepNum, boolean theRepeating, boolean theRequired, Segment theParent, List<Integer> theComponentPath, String theTerserPath) {
 			super(theGroup, theGroupName, theFriendlyName, theRepNum, theRepeating, theRequired, theTerserPath);
@@ -2055,6 +2058,14 @@ public class Hl7V2MessageTree extends Outline implements IDestroyable {
 			return "MSH-1".equals(myParentName) || "MSH-2".equals(myParentName);
 		}
 
+		public void setMaxLength(Integer len) {
+		    myLength = len;
+		}
+
+		@Override
+		public Integer getMaxLength() {
+		    return myLength;
+		}
 	}
 
 	public class TreeNodeUnknown extends TreeNodeBase implements IDestroyable {
