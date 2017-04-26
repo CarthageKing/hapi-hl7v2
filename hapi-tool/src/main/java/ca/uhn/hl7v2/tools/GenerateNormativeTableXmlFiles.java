@@ -1,3 +1,30 @@
+/**
+ * The contents of this file are subject to the Mozilla Public License Version 1.1
+ * (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.mozilla.org/MPL/
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the
+ * specific language governing rights and limitations under the License.
+ *
+ * The Original Code is "GenerateNormativeTableXmlFiles.java".  Description:
+ * "Generates the valueset or table XML files in either NIST or HAPI TestPanel format. The source of the data will be
+ * all the versions of the Normative HL7 V2 standard."
+ *
+ * The Initial Developer of the Original Code is Accenture LLP. Copyright (C)
+ * 2017.  All Rights Reserved.
+ *
+ * Contributor(s): michael.i.calderero
+ *
+ * Alternatively, the contents of this file may be used under the terms of the
+ * GNU General Public License (the "GPL"), in which case the provisions of the GPL are
+ * applicable instead of those above.  If you wish to allow use of your version of this
+ * file only under the terms of the GPL and not to allow others to use your version
+ * of this file under the MPL, indicate your decision by deleting  the provisions above
+ * and replace  them with the notice and other provisions required by the GPL License.
+ * If you do not delete the provisions above, a recipient may use your version of
+ * this file under either the MPL or the GPL.
+ *
+ */
 package ca.uhn.hl7v2.tools;
 
 import java.io.BufferedWriter;
@@ -32,6 +59,12 @@ import ca.uhn.hl7v2.conf.store.AbstractSimpleCodeStore.CodeAndName;
 import ca.uhn.hl7v2.conf.store.AppendableCodeStore;
 import ca.uhn.hl7v2.model.HL7V2Code;
 
+/**
+ * Generates the valueset or table XML files in either NIST or HAPI TestPanel format. The source of the data will be
+ * all the versions of the Normative HL7 V2 standard.
+ *
+ * @author michael.i.calderero
+ */
 public class GenerateNormativeTableXmlFiles {
 
     private static final String OUTPUT_FORMAT = "outformat";
@@ -191,14 +224,37 @@ public class GenerateNormativeTableXmlFiles {
 
     private static class MyContentHandler extends DefaultHandler {
 
+        private static final int INDENT_INCREMENT = 4;
+
+        protected boolean wroteCharacters;
+        protected boolean startedElement;
+        protected int currIndent;
         protected PrintWriter pwriter;
 
         public MyContentHandler(final Writer w) {
             pwriter = new PrintWriter(w);
         }
 
+        private void writeIndent() {
+            if (currIndent > 0) {
+                pwriter.printf("%" + currIndent + "s", " ");
+            }
+        }
+
+        private void incrementIndent() {
+            currIndent += INDENT_INCREMENT;
+        }
+
+        private void decrementIndent() {
+            currIndent -= INDENT_INCREMENT;
+        }
+
         @Override
         public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+            if (startedElement) {
+                pwriter.println();
+            }
+            writeIndent();
             pwriter.print("<");
             pwriter.print(qName);
             for (int i = 0; i < atts.getLength(); i++) {
@@ -212,6 +268,8 @@ public class GenerateNormativeTableXmlFiles {
                 pwriter.print("\"");
             }
             pwriter.print(">");
+            incrementIndent();
+            startedElement = true;
         }
 
         @Override
@@ -219,13 +277,20 @@ public class GenerateNormativeTableXmlFiles {
             String s = new String(ch, start, length);
             s = StringEscapeUtils.escapeXml(s);
             pwriter.print(s);
+            wroteCharacters = true;
         }
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
+            decrementIndent();
+            if (!wroteCharacters) {
+                writeIndent();
+            }
             pwriter.print("</");
             pwriter.print(qName);
-            pwriter.print(">");
+            pwriter.println(">");
+            startedElement = false;
+            wroteCharacters = false;
         }
     }
 }
