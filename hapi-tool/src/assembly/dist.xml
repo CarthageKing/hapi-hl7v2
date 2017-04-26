@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<assembly xmlns="urn:assembly" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:assembly http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>dist</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<!-- copy all dependencies to lib -->
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/lib</outputDirectory>
+			<!-- Don't include main JAR since we'll copy that file to the root -->
+			<excludes>
+				<exclude>ca.uhn.hapi:hapi-tool</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+	<!-- Copy the main JAR file to the root folder -->
+	<files>
+		<file>
+			<outputDirectory>/</outputDirectory>
+			<source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
+		</file>
+	</files>
+</assembly>
