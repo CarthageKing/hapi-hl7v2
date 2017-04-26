@@ -10,7 +10,11 @@
 	<name>HAPI - Java HL7 API - Base Module</name>
 	<packaging>jar</packaging>
 	<dependencies>
-
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

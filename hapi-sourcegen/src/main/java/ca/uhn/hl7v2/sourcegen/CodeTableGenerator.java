@@ -50,7 +50,6 @@ import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.database.NormativeDatabase;
 import ca.uhn.hl7v2.parser.DefaultModelClassFactory;
 import ca.uhn.hl7v2.sourcegen.CodeTableDef.CodeEntryDef;
@@ -66,12 +65,13 @@ public class CodeTableGenerator {
     private static final String NO_DESCRIPTION = "##No description defined##";
 
     private static final Logger log = LoggerFactory.getLogger(CodeTableGenerator.class);
-    private static boolean ourMakeAll;
 
     /**
      * Creates enums for all coding tables found in the normative database.
+     * 
+     * @throws Exception
      */
-    public static void makeAll(String baseDirectory, String version, String theTemplatePackage, String theFileExt) throws IOException, SQLException, HL7Exception {
+    public static void makeAll(String baseDirectory, String version, String theTemplatePackage, String theFileExt) throws Exception {
         //make base directory
         if (!(baseDirectory.endsWith("\\") || baseDirectory.endsWith("/"))) {
             baseDirectory = baseDirectory + "/";
@@ -84,14 +84,13 @@ public class CodeTableGenerator {
             log.warn("No version {} coding tables found in database {}", version, System.getProperty("ca.on.uhn.hl7.database.url"));
         }
 
+        String basePackage = DefaultModelClassFactory.getVersionPackageName(version);
+
         for (CodeTableDef ctd : tables) {
-            try {
-                String basePackage = DefaultModelClassFactory.getVersionPackageName(version);
-                make(targetDir, ctd, version, basePackage, theTemplatePackage, theFileExt);
-            } catch (Exception e) {
-                log.error("Error creating source code for all coding tables", e);
-            }
+            makeEnum(targetDir, ctd, version, basePackage, theTemplatePackage, theFileExt);
         }
+
+        makeUtil(targetDir, tables, version, basePackage, theTemplatePackage, theFileExt);
     }
 
     public static List<CodeTableDef> getCodeTables(String version) throws SQLException {
@@ -737,7 +736,7 @@ public class CodeTableGenerator {
         return newval.toUpperCase();
     }
 
-    private static void make(File targetDirectory, CodeTableDef codeTableDef, String version, String basePackage, String theTemplatePackage, String theFileExt) throws Exception {
+    private static void makeEnum(File targetDirectory, CodeTableDef codeTableDef, String version, String basePackage, String theTemplatePackage, String theFileExt) throws Exception {
         //make sure that targetDirectory is a directory ... 
         if (!targetDirectory.isDirectory()) {
             throw new IOException("Can't create file in " + targetDirectory.toString() + " - it is not a directory.");
@@ -750,6 +749,29 @@ public class CodeTableGenerator {
         Template template = VelocityFactory.getClasspathTemplateInstance(theTemplatePackage + "/hl7code_table.vsm");
         VelocityContext ctx = new VelocityContext();
         ctx.put("codeTable", codeTableDef);
+        ctx.put("basePackageName", basePackage);
+
+        template.merge(ctx, out);
+
+        out.flush();
+        out.close();
+    }
+
+    private static void makeUtil(File targetDirectory, List<CodeTableDef> tables, String version, String basePackage, String theTemplatePackage, String theFileExt) throws Exception {
+        //make sure that targetDirectory is a directory ... 
+        if (!targetDirectory.isDirectory()) {
+            throw new IOException("Can't create file in " + targetDirectory.toString() + " - it is not a directory.");
+        }
+
+        String className = "CodingTableUtil";
+        String fileName = targetDirectory.toString() + "/" + className + "." + theFileExt;
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName, false), SourceGenerator.ENCODING));
+
+        theTemplatePackage = theTemplatePackage.replace(".", "/");
+        Template template = VelocityFactory.getClasspathTemplateInstance(theTemplatePackage + "/hl7code_table_util.vsm");
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("className", className);
+        ctx.put("codeTables", tables);
         ctx.put("basePackageName", basePackage);
 
         template.merge(ctx, out);
