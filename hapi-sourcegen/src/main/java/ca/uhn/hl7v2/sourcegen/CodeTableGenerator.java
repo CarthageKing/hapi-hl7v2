@@ -63,6 +63,7 @@ import ca.uhn.hl7v2.sourcegen.util.VelocityFactory;
 public class CodeTableGenerator {
 
     private static final String NO_DESCRIPTION = "##No description defined##";
+    private static final String REMOVE_ME_DESCRIPTION = "##remove me##";
 
     private static final Logger log = LoggerFactory.getLogger(CodeTableGenerator.class);
 
@@ -217,10 +218,7 @@ public class CodeTableGenerator {
             } else if (418 == ctd.getTableNumber()) {
                 // Procedure priority
                 // Remove the ...
-                // XXX: The entry shows up as garbage when retrieved. We assume this entry is the first so we remove the
-                // first entry
                 log.warn("procedure priority entries: {}", ctd.getEntries());
-                ctd.getEntries().remove(0);
             } else if (455 == ctd.getTableNumber()) {
                 // Type of bill code
                 // Remove the ...
@@ -242,10 +240,7 @@ public class CodeTableGenerator {
             if (418 == ctd.getTableNumber()) {
                 // Procedure priority
                 // Remove the ...
-                // XXX: The entry shows up as garbage when retrieved. We assume this entry is the first so we remove the
-                // first entry
                 log.warn("procedure priority entries: {}", ctd.getEntries());
-                ctd.getEntries().remove(0);
             }
         } else if ("2.5.1".equals(version)) {
             if (210 == ctd.getTableNumber()) {
@@ -258,10 +253,7 @@ public class CodeTableGenerator {
             } else if (418 == ctd.getTableNumber()) {
                 // Procedure priority
                 // Remove the ...
-                // XXX: The entry shows up as garbage when retrieved. We assume this entry is the first so we remove the
-                // first entry
                 log.warn("procedure priority entries: {}", ctd.getEntries());
-                ctd.getEntries().remove(0);
             }
         } else if ("2.6".equals(version)) {
             if (359 == ctd.getTableNumber()) {
@@ -280,6 +272,17 @@ public class CodeTableGenerator {
                 // Ambulatory payment classification code
                 // Remove the ...
                 removeEntries(ctd, "...");
+            }
+        }
+
+        removeEntriesWithRemoveDescription(ctd);
+    }
+
+    private static void removeEntriesWithRemoveDescription(CodeTableDef ctd) {
+        for (Iterator<CodeTableDef.CodeEntryDef> iter = ctd.getEntries().iterator(); iter.hasNext();) {
+            CodeTableDef.CodeEntryDef ced = iter.next();
+            if (REMOVE_ME_DESCRIPTION.equals(ced.getDescription())) {
+                log.warn("Removed the code [{}]", ced.getCode());
             }
         }
     }
@@ -522,6 +525,7 @@ public class CodeTableGenerator {
                 }
             } else if (418 == ctd.getTableNumber()) {
                 // Garbage code ... will be removed in cleanupCodeTable()
+                ced.setDescription(REMOVE_ME_DESCRIPTION);
                 skip = true;
             } else if (455 == ctd.getTableNumber() && "...".equals(ced.getCode())) {
                 // Will be removed in cleanupCodeTable()
@@ -543,6 +547,7 @@ public class CodeTableGenerator {
                 skip = true;
             } else if (418 == ctd.getTableNumber()) {
                 // Garbage code ... will be removed in cleanupCodeTable()
+                ced.setDescription(REMOVE_ME_DESCRIPTION);
                 skip = true;
             } else if (485 == ctd.getTableNumber()) {
                 if ("TD<integer>".equals(ced.getCode())) {
@@ -580,6 +585,7 @@ public class CodeTableGenerator {
         } else if ("2.5.1".equals(version)) {
             if (418 == ctd.getTableNumber()) {
                 // Garbage code ... will be removed in cleanupCodeTable()
+                ced.setDescription(REMOVE_ME_DESCRIPTION);
                 skip = true;
             }
         } else if ("2.6".equals(version)) {
