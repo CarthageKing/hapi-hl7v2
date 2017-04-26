@@ -97,6 +97,7 @@ public class AppendableCodeStore extends AbstractSimpleCodeStore {
         try {
             XMLReader xr = saxParserFactory.newSAXParser().getXMLReader();
             CodeStoreContentHandlerProvider.CodeStoreContentHandler handler = contentHandlerProvider.provideInstance();
+            xr.setContentHandler(handler);
             xr.parse(isrc);
             upsertCodes(codes, handler.getLoadedCodes());
         } catch (ParserConfigurationException e) {

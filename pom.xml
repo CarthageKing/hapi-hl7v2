@@ -760,6 +760,7 @@
 				<module>hapi-hl7overhttp</module>
 				<module>hapi-osgi-base</module>
 				<module>hapi-testpanel</module>
+				<module>hapi-tool</module>
 			</modules>
 		</profile>
 	</profiles>
