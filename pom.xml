@@ -335,6 +335,7 @@
 					<!-- <verbose>true</verbose> -->
 					<forceJavacCompilerUse>true</forceJavacCompilerUse>
 					<fork>true</fork>
+                    <encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 			<!-- <plugin> <groupId>com.mycila.maven-license-plugin</groupId> <artifactId>maven-license-plugin</artifactId> <version>1.9.0</version> <configuration> <header>${project.basedir}/src/license/header.txt</header> 
