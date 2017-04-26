@@ -215,7 +215,12 @@
 			<plugin>
 				<groupId>de.jflex.maven.plugin</groupId>
 				<artifactId>maven-jflex-plugin</artifactId>
-				<!--version>0.2</version -->
+				<version>1.0</version>
+				<!--
+                <groupId>de.jflex</groupId>
+                <artifactId>jflex-maven-plugin</artifactId>
+                <version>1.6.1</version>
+                -->
 				<executions>
 					<execution>
 						<goals>
@@ -227,6 +232,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>keytool-maven-plugin</artifactId>
+				<version>1.5</version>
 				<executions>
 				</executions>
 				<configuration>
@@ -238,6 +244,7 @@
 			<plugin>
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
+				<version>1.10.b1</version>
 				<configuration>
 					<header>${project.basedir}/../src/license/header.txt</header>
 				</configuration>
