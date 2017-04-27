@@ -251,16 +251,16 @@ public class ${segmentName} extends AbstractSegment {
 
 
     /** {@inheritDoc} */   
-    protected Type createNewTypeWithoutReflection(int field) {
+    public Type createNewTypeWithoutReflection(int field) {
        switch (field) {
 #foreach ( $element in $elements )
 #set ( $idx = ${velocityCount} - 1 )
 #if ( $element.alternateType == "Varies" )
           case ${idx}: return new Varies(getMessage(), null);
 #elseif ( $element.idType && $element.hasTableNamespace)
-          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), "${element.descEscaped}");
+          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), "${element.descEscaped}").setTableId("${element.table}");
 #elseif ( $element.idType )
-          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), "${element.descEscaped}");
+          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), "${element.descEscaped}").setTableId("${element.table}");
 #else
           case ${idx}: return new ${element.alternateType}(getMessage(), "${element.descEscaped}");
 #end

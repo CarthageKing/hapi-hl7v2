@@ -6,9 +6,10 @@
     Added "B" to Usage list 
     Changed "Identiifer" to "Identifier" in HL7v2xConformanceProfile attributes 
     Made UseCase optional
+    Added "W" to Usage list - michael.i.calderero 20170426
 -->
 
-<!ENTITY % Usage "R | RE | O | C | CE | X | B">
+<!ENTITY % Usage "R | RE | O | C | CE | X | B | W">
 <!ELEMENT HL7v2xConformanceProfile (MetaData, ImpNote?, UseCase?, Encodings, (DynamicDef, (HL7v2xStaticDef | HL7v2xStaticDefRef))+)>
 <!ATTLIST HL7v2xConformanceProfile
     HL7Version CDATA #REQUIRED

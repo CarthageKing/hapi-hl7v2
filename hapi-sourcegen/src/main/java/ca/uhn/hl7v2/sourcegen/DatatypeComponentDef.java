@@ -6,6 +6,7 @@ public class DatatypeComponentDef extends DatatypeDef {
     private String parentType;
     private int indexWithinParent;
     private Integer maxLength;
+    private String optionality;
 
     public DatatypeComponentDef(String theParentType, int theIndexWithinParent, String theType, String theName, int theTable) {
         super(theType, theName);
@@ -25,7 +26,15 @@ public class DatatypeComponentDef extends DatatypeDef {
     public Integer getMaxLength() {
         return maxLength;
     }
-    
+
+    public void setOptionality(String optionality) {
+        this.optionality = optionality;
+    }
+
+    public String getOptionality() {
+        return optionality;
+    }
+
     public String getAccessorName() {
         return SourceGenerator.makeAccessorName(getName(), parentType);
     }

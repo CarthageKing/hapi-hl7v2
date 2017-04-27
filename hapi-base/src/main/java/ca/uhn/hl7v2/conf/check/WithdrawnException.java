@@ -6,8 +6,8 @@
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the
  * specific language governing rights and limitations under the License.
  *
- * The Original Code is "HelpMain.java".  Description:
- * "Entry point to get general help for available tools."
+ * The Original Code is "WithdrawnException.java".  Description:
+ * "An exception indicating that the message had a populated field that is marked as "Withdrawn" as per the profile."
  *
  * The Initial Developer of the Original Code is Accenture LLP. Copyright (C)
  * 2017.  All Rights Reserved.
@@ -24,28 +24,35 @@
  * this file under either the MPL or the GPL.
  *
  */
-package ca.uhn.hl7v2.tools;
-
-import java.io.PrintWriter;
+package ca.uhn.hl7v2.conf.check;
 
 /**
- * Entry point to get general help for available tools.
- *
+ * An exception indicating that the message had a populated field that is marked as "Withdrawn" as per the profile.
+ * 
  * @author michael.i.calderero
  */
-public class HelpMain {
+@SuppressWarnings("serial")
+public class WithdrawnException extends ca.uhn.hl7v2.HL7Exception {
 
-    public static void main(String[] args) throws Exception {
-        PrintWriter pw = new PrintWriter(System.out);
-        pw.println("Tools Available:");
-        pw.println("================");
-        pw.println();
-        pw.println(ConvertSourceTableToHAPITestPanelFormat.class.getName());
-        pw.println(GenerateNormativeTableXmlFiles.class.getName());
-        pw.println();
-        pw.println("To run a specific command, you can invoke it via the following command: java -cp hapi-tool.jar <command name>");
-        pw.println();
-        pw.println("Example: java -cp hapi-tool.jar " + ConvertSourceTableToHAPITestPanelFormat.class.getName());
-        pw.flush();
+    /**
+     * Constructor.
+     * 
+     * @param msg
+     *            the detail message.
+     */
+    public WithdrawnException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param msg
+     *            the detail message.
+     * @param cause
+     *            an underlying exception
+     */
+    public WithdrawnException(String msg, Throwable cause) {
+        super(msg, cause);
     }
 }

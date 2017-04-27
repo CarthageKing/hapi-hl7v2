@@ -222,7 +222,7 @@ public class GenerateNormativeTableXmlFiles {
         handler.characters(arr, 0, arr.length);
     }
 
-    private static class MyContentHandler extends DefaultHandler {
+    public static class MyContentHandler extends DefaultHandler {
 
         private static final int INDENT_INCREMENT = 4;
 

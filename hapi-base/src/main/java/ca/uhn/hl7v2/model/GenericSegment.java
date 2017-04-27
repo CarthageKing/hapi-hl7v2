@@ -37,7 +37,7 @@ public class GenericSegment extends AbstractSegment {
     /**
      * {@inheritDoc}
      */
-	protected Type createNewTypeWithoutReflection(int field) {
+	public Type createNewTypeWithoutReflection(int field) {
 		return new Varies(getMessage(), null);
 	}
     

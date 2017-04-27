@@ -269,7 +269,7 @@ public abstract class AbstractSegment extends AbstractStructure implements
 	 * @param field
 	 *            Field number - Note that this is zero indexed!
 	 */
-	protected Type createNewTypeWithoutReflection(int field) {
+	public Type createNewTypeWithoutReflection(int field) {
 		return null;
 	}
 

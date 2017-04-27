@@ -76,7 +76,7 @@ public class ConformanceSegment extends AbstractSegment implements ConformanceSt
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Type createNewTypeWithoutReflection(int theField) {
+	public Type createNewTypeWithoutReflection(int theField) {
 		if (Boolean.TRUE.equals(myPrototypeHasBeenUsed.get(theField))) {
 			return myPrototypes.get(theField).instantiateClone();
 		}

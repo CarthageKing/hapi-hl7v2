@@ -212,7 +212,7 @@ public class SegmentGenerator extends java.lang.Object {
 			sql.append(version);
 			sql.append("' ");
 			sql.append("ORDER BY HL7SegmentDataElements.seg_code, HL7SegmentDataElements.seq_no;");
-			//System.err.println(sql.toString());  //for debugging
+			log.debug("The sql string: {}", sql.toString());
 			
 			Statement stmt;
 			ResultSet rs;
@@ -235,6 +235,8 @@ public class SegmentGenerator extends java.lang.Object {
 				if (se.repetitions == 0) {
 					if (se.rep == null || !se.rep.equalsIgnoreCase("Y")) {
 						se.repetitions = 1;
+					} else if (null != se.rep && "Y".equalsIgnoreCase(se.rep)) {
+					    // according to javadoc of AbstractSegment.add(), 0 means "no limit"
 					}
 				}
 				se.desc = rs.getString(5);
@@ -279,7 +281,9 @@ public class SegmentGenerator extends java.lang.Object {
 				// 2864817
 				if (version.equals("2.3") && name.equals("PID") && index == 5) {
 					se.rep = "Y";
-					se.repetitions = -1;
+					//se.repetitions = -1;
+					// according to javadoc of AbstractSegment.add(), 0 means "no limit"
+	                se.repetitions = 0;
 				}
 				
 				if (version.equals("2.3.1") && name.equals("OM1") && se.type.equals("TX_CHALLENGE")) {
@@ -289,6 +293,12 @@ public class SegmentGenerator extends java.lang.Object {
 				    se.type = "TX";
 				}
 
+				if (se.repetitions < 1) {
+				    log.debug("version {} segment [{}] field {} [{}] had repetitions of {}", version, name, se.field, se.getAlternateType(), se.repetitions);
+				}
+				if (se.length < 1) {
+				    log.debug("version {} segment [{}] field {} [{}] had length of {}", version, name, se.field, se.getAlternateType(), se.length);
+				}
 				elements.add(se);
 				/*System.out.println("Segment: " + name + " Field: " + se.field + " Rep: " + se.rep +
 				" Repetitions: " + se.repetitions + " Desc: " + se.desc + " Length: " + se.length +

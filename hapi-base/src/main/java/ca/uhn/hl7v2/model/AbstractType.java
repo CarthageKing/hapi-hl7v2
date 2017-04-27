@@ -46,6 +46,8 @@ public abstract class AbstractType implements Type {
     private final Message message;
     private final String friendlyName;
     private Integer maxLength;
+    private String tableId;
+    private String optionality;
     
     /** 
      * Creates a new instance of AbstractType
@@ -82,8 +84,10 @@ public abstract class AbstractType implements Type {
         return message;
     }
 
-    public void setMaxLength(Integer maxLength) {
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractType> T setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
+        return (T) this;
     }
 
     @Override
@@ -91,6 +95,27 @@ public abstract class AbstractType implements Type {
         return maxLength;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractType> T setTableId(String tableId) {
+        this.tableId = tableId;
+        return (T) this;
+    }
+
+    @Override
+    public String getTableId() {
+        return tableId;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractType> T setOptionality(String optionality) {
+        this.optionality = optionality;
+        return (T) this;
+    }
+
+    @Override
+    public String getOptionality() {
+        return optionality;
+    }
 
     /**
      * {@inheritDoc }

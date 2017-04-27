@@ -169,7 +169,7 @@ public class DataTypeGenerator extends Object {
         StringBuffer sql = new StringBuffer();
         //this query is adapted from the XML SIG informative document
         sql.append("SELECT HL7DataStructures.data_structure, HL7DataStructureComponents.seq_no, HL7DataStructures.description, HL7DataStructureComponents.table_id,  ");
-        sql.append("HL7Components.description, HL7Components.table_id, HL7Components.data_type_code, HL7Components.data_structure, HL7DataStructureComponents.max_length ");
+        sql.append("HL7Components.description, HL7Components.table_id, HL7Components.data_type_code, HL7Components.data_structure, HL7DataStructureComponents.max_length, HL7DataStructureComponents.req_opt ");
         sql.append("FROM HL7Versions LEFT JOIN (HL7DataStructures LEFT JOIN (HL7DataStructureComponents LEFT JOIN HL7Components ");
         sql.append("ON HL7DataStructureComponents.comp_no = HL7Components.comp_no AND ");
         sql.append("HL7DataStructureComponents.version_id = HL7Components.version_id) ");
@@ -188,6 +188,7 @@ public class DataTypeGenerator extends Object {
         ArrayList<String> descriptions = new ArrayList<String>(20);
         ArrayList<Integer> tables = new ArrayList<Integer>(20);
         List<Integer> maxLengths = new ArrayList<Integer>();
+        List<String> optionality = new ArrayList<>();
         String description = null;
         while (rs.next()) {
             if (description == null) description = rs.getString(3);
@@ -216,6 +217,9 @@ public class DataTypeGenerator extends Object {
                 } else {
                     maxLengths.add(null);
                 }
+            }
+            {
+                optionality.add(StringUtils.trimToNull(rs.getString(10)));
             }
         }
         stmt.close();
@@ -279,6 +283,7 @@ public class DataTypeGenerator extends Object {
                 
                 componentDefs[i] = new DatatypeComponentDef(dataType, i, typeName, componentName, ((Integer) tables.get(i)).intValue());
                 componentDefs[i].setMaxLength(maxLengths.get(i));
+                componentDefs[i].setOptionality(optionality.get(i));
             }
             
             source = makeComposite(dataType, description, componentDefs, type, desc, table, version, basePackage, theTemplatePackage);

@@ -236,6 +236,13 @@ public class GroupGenerator extends java.lang.Object {
                         		if ("SPECIMEN".equals(name))
                         		if (Version.versionOf(version) == Version.V251) {
                         			name = "OBSERVATION_REQUEST_SPECIMEN";
+                        		} else if ("2.5".equals(version)) {
+                                    // v2.5 PDF specifies a top-level SPECIMEN group and then an inner SPECIMEN group containing just SPM and SAC.
+                                    // Since the group names are the same, the generator will create a recursive reference to the top level
+                                    // SPECIMEN group when it attempts to generate code for the inner SPECIMEN group.
+                                    // Capture the inner specimen and rename that to something else to prevent the recursion
+                        		    // Rename this to "ORDER_SPECIMEN" based on the stable release of HAPI 2.2
+                        		    name = "ORDER_SPECIMEN";
                         		}
                         	}
                         }

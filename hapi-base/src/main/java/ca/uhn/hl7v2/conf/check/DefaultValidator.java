@@ -382,8 +382,9 @@ public class DefaultValidator extends HapiContextSupport implements Validator {
 
 		testUsage(encoded, profile.getUsage(), profile.getName(), exList);
 
-		if (!profile.getUsage().equals("X")) {
-            checkDataType(profile.getDatatype(), type, exList);
+		// michael.i.calderero 20170426 - skip validation for withdrawn types
+		if (!profile.getUsage().equals("X") && !profile.getUsage().equals("W")) {
+		    checkDataType(profile.getDatatype(), type, exList);
             checkLength(profile.getLength(), profile.getName(), encoded, exList);
             checkConstantValue(profile.getConstantValue(), encoded, exList);
 
@@ -461,6 +462,12 @@ public class DefaultValidator extends HapiContextSupport implements Validator {
 						+ "\" is present but specified as not used (X)"));
 		} else if (usage.equalsIgnoreCase("B")) {
 			// can't test anything
+		} else if (usage.equalsIgnoreCase("W")) {
+		    // michael.i.calderero 20170426 - check for withdrawn types. Use specific
+		    // exception so client can filter these out
+            if (encoded.length() > 0) {
+                exList.add(new WithdrawnException("Element \"" + name + "\" is present but specified as withdrawn (W)"));
+            }
 		}
 	}
 

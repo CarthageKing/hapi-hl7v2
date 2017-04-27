@@ -418,6 +418,16 @@ public final class Unmodifiable {
             return getDelegate().getMaxLength();
         }
 
+        @Override
+        public String getTableId() {
+            return getDelegate().getTableId();
+        }
+
+        @Override
+        public String getOptionality() {
+            return getDelegate().getOptionality();
+        }
+
         public ExtraComponents getExtraComponents() {
             return unmodifiableExtraComponents(getDelegate().getExtraComponents());
         }

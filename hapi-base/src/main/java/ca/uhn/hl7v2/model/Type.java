@@ -42,21 +42,35 @@ public interface Type extends Serializable, Visitable {
      * @return the name of the type
      */
     public String getName();
-    
+
     /**
      * Returns the friendly name of the type (e.g. friendly name of AD-1 is "Street Address")
      *
      * @return the friendly name of the type
      */
     public String getFriendlyName();
-    
+
     /**
      * Returns the max length of the type if it is defined.
      *
      * @return max length of the type if it is defined.
      */
     public Integer getMaxLength();
-    
+
+    /**
+     * Returns the table number of the type if available.
+     *
+     * @return the table number of the type if available.
+     */
+    public String getTableId();
+
+    /**
+     * Returns the optionality of the type if available.
+     *
+     * @return the optionality of the type if available.
+     */
+    public String getOptionality();
+
     /**
      * Returns an object containing any extra (non-standard) components that 
      * have been added to this type at run-time.  This object can also be used
