@@ -58,6 +58,14 @@ public class ${datatype.type} extends ${baseClass} {
     /**
      * Constructs an uninitialized ${datatype.type}.
      * @param message the Message to which this Type belongs
+     */
+    public ${datatype.type}(Message message) {
+        super(message, null);
+    }
+
+    /**
+     * Constructs an uninitialized ${datatype.type}.
+     * @param message the Message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public ${datatype.type}(Message message, String friendlyName) {
@@ -65,6 +73,14 @@ public class ${datatype.type} extends ${baseClass} {
     }
 #end
 #if ( $datatype.idType )
+    /**
+     * Constructs an uninitialized ${datatype.type}.
+     * @param message the Message to which this Type belongs
+     */
+    public ${datatype.type}(Message message, int theTable) {
+        super(message, theTable, null);
+    }
+
     /**
      * Constructs an uninitialized ${datatype.type}.
      * @param message the Message to which this Type belongs

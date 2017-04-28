@@ -64,7 +64,14 @@ import ca.uhn.hl7v2.model.Message;
  */
 
 public class TM extends ca.uhn.hl7v2.model.primitive.TM {
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public TM(Message theMessage) {
+        super(theMessage);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
@@ -74,7 +81,7 @@ public class TM extends ca.uhn.hl7v2.model.primitive.TM {
     }
 
     /**
-     * @return "2.5"
+     * @return "2.5.1"
      */
     public String getVersion() {
         return "2.5.1";

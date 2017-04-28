@@ -51,7 +51,14 @@ import ca.uhn.hl7v2.model.Message;
  */
 
 public class ID extends ca.uhn.hl7v2.model.primitive.ID {
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public ID(Message theMessage) {
+        super(theMessage);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
@@ -62,13 +69,29 @@ public class ID extends ca.uhn.hl7v2.model.primitive.ID {
 
     /**
      * @param theMessage message to which this Type belongs
+     * @param theTable HL7 table from which values are to be drawn
+     */
+    public ID(Message theMessage, int theTable) {
+        super(theMessage, theTable);
+    }
+
+    /**
+     * @param theMessage message to which this Type belongs
      * @param theTable HL7 table from which values are to be drawn 
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public ID(Message theMessage, int theTable, String friendlyName) {
         super(theMessage, theTable, friendlyName);
     }
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     * @param theTable HL7 table from which values are to be drawn
+     */
+    public ID(Message theMessage, Integer theTable) {
+        super(theMessage, theTable);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param theTable HL7 table from which values are to be drawn 

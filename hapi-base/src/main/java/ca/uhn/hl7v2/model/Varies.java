@@ -109,6 +109,16 @@ public class Varies implements Variable {
      * Creates new Varies.
      *
      * @param message message to which this type belongs
+     */
+    public Varies(Message message) {
+        data = new GenericPrimitive(message);
+        this.message = message;
+    }
+
+    /**
+     * Creates new Varies.
+     *
+     * @param message message to which this type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public Varies(Message message, String friendlyName) {

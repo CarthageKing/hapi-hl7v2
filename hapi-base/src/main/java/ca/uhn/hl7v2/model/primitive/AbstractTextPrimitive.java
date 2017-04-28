@@ -37,6 +37,13 @@ import ca.uhn.hl7v2.model.Message;
 @SuppressWarnings("serial")
 public abstract class AbstractTextPrimitive extends AbstractPrimitive {
 
+    /**
+     * Constructor
+     */
+    public AbstractTextPrimitive(Message theMessage) {
+        super(theMessage);
+    }
+
 	/**
 	 * Constructor
 	 */

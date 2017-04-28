@@ -20,6 +20,15 @@ public class NULLDT extends AbstractPrimitive
      * Constructor
      * 
      * @param theMessage The message
+     */
+    public NULLDT(Message theMessage) {
+        super(theMessage);
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param theMessage The message
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public NULLDT(Message theMessage, String friendlyName) {

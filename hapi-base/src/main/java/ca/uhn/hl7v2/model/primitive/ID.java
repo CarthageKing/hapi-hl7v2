@@ -51,13 +51,29 @@ import ca.uhn.hl7v2.model.Message;
 public abstract class ID extends AbstractTextPrimitive {
 
     private int myTable = 0;
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public ID(Message theMessage) {
+        super(theMessage, null);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public ID(Message theMessage, String friendlyName) {
         super(theMessage, friendlyName);
+    }
+
+    /**
+     * @param theMessage message to which this Type belongs
+     * @param theTable HL7 table from which values are to be drawn 
+     */
+    public ID(Message theMessage, int theTable) {
+        super(theMessage, null);
+        myTable = theTable;
     }
 
     /**
@@ -69,7 +85,16 @@ public abstract class ID extends AbstractTextPrimitive {
         super(theMessage, friendlyName);
         myTable = theTable;
     }
-    
+
+    /**
+     * @param message message to which this Type belongs
+     * @param theTable HL7 table from which values are to be drawn 
+     */
+    public ID(Message message, Integer theTable) {
+        super(message, null);
+        myTable = theTable;
+    }
+
     /**
      * @param message message to which this Type belongs
      * @param theTable HL7 table from which values are to be drawn

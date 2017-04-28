@@ -11,12 +11,23 @@ public class IDWithNamespace extends ID {
 	private String myNamespace;
 	private String myHl7Version;
 
+    public IDWithNamespace(Message theMessage, String theHl7Version, String theNamespace, int theTable) {
+        super(theMessage, theTable);
+        myHl7Version = theHl7Version;
+        myNamespace = theNamespace;
+    }
+
 	public IDWithNamespace(Message theMessage, String theHl7Version, String theNamespace, int theTable, String friendlyName) {
 		super(theMessage, theTable, friendlyName);
 		myHl7Version = theHl7Version;
 		myNamespace = theNamespace;
 	}
 
+    public IDWithNamespace(Message theMessage, String theHl7Version, String theNamespace, Integer theTable) {
+        super(theMessage, theTable);
+        myHl7Version = theHl7Version;
+        myNamespace = theNamespace;
+    }
 
 	public IDWithNamespace(Message theMessage, String theHl7Version, String theNamespace, Integer theTable, String friendlyName) {
 		super(theMessage, theTable, friendlyName);

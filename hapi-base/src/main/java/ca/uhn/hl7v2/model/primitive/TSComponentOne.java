@@ -50,7 +50,14 @@ import ca.uhn.hl7v2.model.Message;
 public abstract class TSComponentOne extends AbstractPrimitive {
 
     private CommonTS myDetail;
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public TSComponentOne(Message theMessage) {
+        super(theMessage);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")

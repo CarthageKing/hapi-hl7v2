@@ -11,6 +11,15 @@ public class ISWithNamespace extends IS {
 	private String myNamespace;
 	private String myHl7Version;
 
+    /**
+     * Constructor
+     */
+    public ISWithNamespace(Message theMessage, String theHl7Version, String theNamespace, int theTable) {
+        super(theMessage, theTable);
+        myHl7Version = theHl7Version;
+        myNamespace = theNamespace;
+    }
+
 	/**
 	 * Constructor
 	 */
@@ -20,6 +29,14 @@ public class ISWithNamespace extends IS {
 		myNamespace = theNamespace;
 	}
 
+    /**
+     * Constructor
+     */
+    public ISWithNamespace(Message theMessage, String theHl7Version, String theNamespace, Integer theTable) {
+        super(theMessage, theTable);
+        myHl7Version = theHl7Version;
+        myNamespace = theNamespace;
+    }
 
 	/**
 	 * Constructor

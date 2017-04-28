@@ -44,7 +44,14 @@ import ca.uhn.hl7v2.validation.ValidationException;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractPrimitive extends AbstractType implements Primitive {
-    
+
+    /**
+     * @param message message to which this type belongs
+     */
+    public AbstractPrimitive(Message message) {
+        super(message, null);
+    }
+
     /**
      * @param message message to which this type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")

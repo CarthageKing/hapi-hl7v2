@@ -20,6 +20,17 @@ public class GenericComposite extends AbstractComposite {
      * Creates a generic composite
      *
      * @param message message this object is linked to
+     */
+    public GenericComposite(Message message) {
+        super(message);
+        this.message = message;
+        components = new ArrayList<Type>(20);
+    }
+
+    /**
+     * Creates a generic composite
+     *
+     * @param message message this object is linked to
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public GenericComposite(Message message, String friendlyName) {

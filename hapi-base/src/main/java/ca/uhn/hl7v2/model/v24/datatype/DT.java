@@ -45,7 +45,14 @@ import ca.uhn.hl7v2.model.Message;
  */
 
 public class DT extends ca.uhn.hl7v2.model.primitive.DT {
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public DT(Message theMessage) {
+        super(theMessage);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")

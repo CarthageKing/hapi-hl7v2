@@ -62,7 +62,7 @@
 			<artifactId>hapi-structures-v26</artifactId>
 			<version>${hapi.version.structures}</version>
 		</dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>ca.uhn.hapi</groupId>
             <artifactId>hapi-structures-v27</artifactId>
             <version>${hapi.version.structures}</version>
@@ -81,7 +81,7 @@
             <groupId>ca.uhn.hapi</groupId>
             <artifactId>hapi-structures-v281</artifactId>
             <version>${hapi.version.structures}</version>
-        </dependency>
+        </dependency>-->
 		<!-- 
 		<dependency>
 			<groupId>ca.uhn.hapi</groupId>

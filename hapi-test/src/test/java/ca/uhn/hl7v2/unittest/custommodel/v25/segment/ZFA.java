@@ -59,7 +59,7 @@ public class ZFA extends AbstractSegment {
      * This method must be overridden. The easiest way is just to return null.
      */
     @Override
-    protected Type createNewTypeWithoutReflection(int field) {
+    public Type createNewTypeWithoutReflection(int field) {
         return null;
     }
 

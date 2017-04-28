@@ -18,6 +18,13 @@ public class CM extends GenericComposite {
 
     /**
      * @param message message to which this Type belongs
+     */
+    public CM(Message message) {
+        super(message);
+    }
+
+    /**
+     * @param message message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
      */
     public CM(Message message, String friendlyName) {

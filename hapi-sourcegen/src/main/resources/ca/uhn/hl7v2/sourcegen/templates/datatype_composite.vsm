@@ -60,6 +60,14 @@ public class ${datatypeName} extends AbstractComposite {
     /** 
      * Creates a new ${datatypeName} type
      */
+    public ${datatypeName}(Message message) {
+        super(message, null);
+        init();
+    }
+
+    /** 
+     * Creates a new ${datatypeName} type
+     */
     public ${datatypeName}(Message message, String friendlyName) {
         super(message, friendlyName);
         init();

@@ -225,6 +225,11 @@ public class DataTypeGenerator extends Object {
             }
 
             dataTypes.add(dt);
+            if ("2.2".equals(version) && "PN".equals(dataType) && "familiy name".equals(de)) {
+                String olde = de;
+                de = "family name";
+                log.warn("Fixed PN wrong spelling '" + olde + "' to '" + de + "'");
+            }
             descriptions.add(de);
             tables.add(new Integer(ta));
             {

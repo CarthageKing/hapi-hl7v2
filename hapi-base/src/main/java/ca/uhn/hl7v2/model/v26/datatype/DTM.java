@@ -78,7 +78,14 @@ import ca.uhn.hl7v2.model.Message;
  * @author Neal Acharya
  */
 public class DTM extends ca.uhn.hl7v2.model.primitive.TSComponentOne {
-    
+
+    /**
+     * @param theMessage message to which this Type belongs
+     */
+    public DTM(Message theMessage) {
+        super(theMessage);
+    }
+
     /**
      * @param theMessage message to which this Type belongs
      * @param friendlyName friendly name for the type (e.g. friendly name of AD-1 is "Street Address")
@@ -88,7 +95,7 @@ public class DTM extends ca.uhn.hl7v2.model.primitive.TSComponentOne {
     }
 
     /**
-     * @return "2.5"
+     * @return "2.6"
      */
     public String getVersion() {
         return "2.6";

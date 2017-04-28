@@ -740,9 +740,9 @@
 			<id>ALLMODULES</id>
 			<modules>
 				<module>hapi-base</module>
-				<!--<module>hapi-examples</module>
+				<module>hapi-examples</module>
 				<module>hapi-test</module>
-				<module>hapi-testmindeps</module>-->
+				<module>hapi-testmindeps</module>
 				<module>hapi-sourcegen</module>
 				<module>hapi-structures-v21</module>
 				<module>hapi-structures-v22</module>
