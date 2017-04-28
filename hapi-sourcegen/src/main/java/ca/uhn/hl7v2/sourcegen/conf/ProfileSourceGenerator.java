@@ -372,17 +372,20 @@ public class ProfileSourceGenerator {
 
         String type = theComponent.getDatatype();
         String name = theComponent.getName();
+        boolean hasTableId = false;
 
         int table = 0;
         if (StringUtils.isNotBlank(theComponent.getTable())) {
             try {
                 table = Integer.parseInt(theComponent.getTable());
+                hasTableId = true;
             } catch (NumberFormatException e) {
                 // TODO: handle this somehow?
             }
         }
 
         DatatypeComponentDef retVal = new DatatypeComponentDef(parentType, indexWithinParent, type, name, table);
+        retVal.setHasTableId(hasTableId);
 
         for (int i = 0; i < theComponent.getSubComponents(); i++) {
             SubComponent next = theComponent.getSubComponent(i + 1);
@@ -397,17 +400,20 @@ public class ProfileSourceGenerator {
 
         String type = theComponent.getDatatype();
         String desc = theComponent.getName();
+        boolean hasTableId = false;
 
         int table = 0;
         if (StringUtils.isNotBlank(theComponent.getTable())) {
             try {
                 table = Integer.parseInt(theComponent.getTable());
+                hasTableId = true;
             } catch (NumberFormatException e) {
                 // TODO: handle this somehow?
             }
         }
 
         DatatypeComponentDef retVal = new DatatypeComponentDef(parentType, indexWithinParent, type, desc, table);
+        retVal.setHasTableId(hasTableId);
         return retVal;
     }
 

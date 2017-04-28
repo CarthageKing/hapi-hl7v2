@@ -71,9 +71,11 @@ public class ${datatypeName} extends AbstractComposite {
 #set ( $idx = ${velocityCount} - 1 )
 #if (${component.idType})
         data[${idx}] = new ${component.type}(getMessage(), ${component.table}, "${component.nameEscaped}");
-        ((ca.uhn.hl7v2.model.AbstractType) data[${idx}]).setTableId("${component.table}");
 #else
         data[${idx}] = new ${component.type}(getMessage(), "${component.nameEscaped}");
+#end
+#if (${component.hasTableId})
+        ((ca.uhn.hl7v2.model.AbstractType) data[${idx}]).setTableId("${component.table}");
 #end
 #if (${component.maxLength})
         ((ca.uhn.hl7v2.model.AbstractType) data[${idx}]).setMaxLength(${component.maxLength});

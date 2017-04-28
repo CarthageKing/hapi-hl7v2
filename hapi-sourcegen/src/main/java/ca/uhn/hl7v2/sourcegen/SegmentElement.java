@@ -43,6 +43,7 @@ public class SegmentElement {
 	public String opt;
 	public String rep;
 	public int repetitions;
+	public boolean hasTableId;
 	public int table;
 	public String tableNamespace;
 	public String type;
@@ -97,9 +98,13 @@ public class SegmentElement {
 		return repetitions;
 	}
 
-	public int getTable() {
-		return table;
-	}
+    public boolean isHasTableId() {
+        return hasTableId;
+    }
+
+    public int getTable() {
+        return table;
+    }
 
 	/**
 	 * @return the tableNamespace

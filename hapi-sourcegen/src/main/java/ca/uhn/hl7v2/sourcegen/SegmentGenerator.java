@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.velocity.Template;
@@ -249,7 +250,18 @@ public class SegmentGenerator extends java.lang.Object {
 				usedFieldDescs.add(originalSeDesc);
 
 				se.length = rs.getInt(6);
-				se.table = rs.getInt(7);
+				String tblStr = StringUtils.trimToNull(rs.getString(7));
+				se.hasTableId = false;
+				if (!StringUtils.isBlank(tblStr)) {
+				    try {
+				        se.table = Integer.parseInt(tblStr);
+                        if (se.table > 0) {
+                            se.hasTableId = true;
+                        }
+				    } catch (NumberFormatException e) {
+				        // TODO: handle this somehow
+				    }
+				}
 				se.opt = rs.getString(8);
 				se.type = rs.getString(10);
 				//shorten CE_x to CE

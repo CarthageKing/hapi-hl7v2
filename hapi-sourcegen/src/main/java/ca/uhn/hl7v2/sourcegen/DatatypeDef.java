@@ -8,6 +8,7 @@ import org.apache.commons.lang.WordUtils;
 
 public class DatatypeDef {
 
+    private boolean hasTableId;
     private String type;
     private String name;
     private List<DatatypeComponentDef> mySubComponentDefs = new ArrayList<DatatypeComponentDef>();
@@ -31,6 +32,14 @@ public class DatatypeDef {
     
     public List<DatatypeComponentDef> getSubComponentDefs() {
         return mySubComponentDefs;
+    }
+
+    public void setHasTableId(boolean hasTableId) {
+        this.hasTableId = hasTableId;
+    }
+
+    public boolean isHasTableId() {
+        return hasTableId;
     }
 
     public String getType() {

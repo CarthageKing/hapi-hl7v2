@@ -187,6 +187,7 @@ public class DataTypeGenerator extends Object {
         ArrayList<String> dataTypes = new ArrayList<String>(20);
         ArrayList<String> descriptions = new ArrayList<String>(20);
         ArrayList<Integer> tables = new ArrayList<Integer>(20);
+        List<Boolean> hasTableIds = new ArrayList<Boolean>();
         List<Integer> maxLengths = new ArrayList<Integer>();
         List<String> optionality = new ArrayList<>();
         String description = null;
@@ -195,7 +196,23 @@ public class DataTypeGenerator extends Object {
 
             String de = rs.getString(5);
             String dt = rs.getString(8);
-            int ta = rs.getInt(4);
+            String taStr = StringUtils.trimToNull(rs.getString(4));
+            int ta = 0;
+            if (!StringUtils.isBlank(taStr)) {
+                try {
+                    ta = Integer.parseInt(taStr);
+                    if (ta > 0) {
+                        hasTableIds.add(true);
+                    } else {
+                        hasTableIds.add(false);
+                    }
+                } catch (NumberFormatException e) {
+                    // do nothing
+                    hasTableIds.add(false);
+                }
+            } else {
+                hasTableIds.add(false);
+            }
             //trim all CE_x to CE
             if (dt != null) if (dt.startsWith("CE")) dt = "CE";
             //System.out.println("Component: " + de + "  Data Type: " + dt);  //for debugging
@@ -282,6 +299,9 @@ public class DataTypeGenerator extends Object {
                 typeName = SourceGenerator.getAlternateType(typeName, version);
                 
                 componentDefs[i] = new DatatypeComponentDef(dataType, i, typeName, componentName, ((Integer) tables.get(i)).intValue());
+                if (hasTableIds.get(i)) {
+                    componentDefs[i].setHasTableId(true);
+                }
                 componentDefs[i].setMaxLength(maxLengths.get(i));
                 componentDefs[i].setOptionality(optionality.get(i));
             }

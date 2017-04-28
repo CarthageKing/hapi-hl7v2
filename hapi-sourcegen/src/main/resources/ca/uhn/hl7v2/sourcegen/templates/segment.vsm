@@ -258,11 +258,11 @@ public class ${segmentName} extends AbstractSegment {
 #if ( $element.alternateType == "Varies" )
           case ${idx}: return new Varies(getMessage(), null);
 #elseif ( $element.idType && $element.hasTableNamespace)
-          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), "${element.descEscaped}").setTableId("${element.table}");
+          case ${idx}: return new ${element.alternateType}(getMessage(), ${hl7VersionInQuotes}, ${element.tableNamespaceInQuotes}, new Integer( ${element.table} ), "${element.descEscaped}")#if (${element.hasTableId}).setTableId("${element.table}")#end;
 #elseif ( $element.idType )
-          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), "${element.descEscaped}").setTableId("${element.table}");
+          case ${idx}: return new ${element.alternateType}(getMessage(), new Integer( ${element.table} ), "${element.descEscaped}")#if (${element.hasTableId}).setTableId("${element.table}")#end;
 #else
-          case ${idx}: return new ${element.alternateType}(getMessage(), "${element.descEscaped}");
+          case ${idx}: return new ${element.alternateType}(getMessage(), "${element.descEscaped}")#if (${element.hasTableId}).setTableId("${element.table}")#end;
 #end
 #end       
           default: return null;
