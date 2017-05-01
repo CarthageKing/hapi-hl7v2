@@ -115,7 +115,7 @@ public class MessageGenerator extends Object {
 		Connection conn = normativeDatabase.getConnection();
 		Statement stmt = conn.createStatement();
 		String sql = getMessageListQuery(theVersion);
-		//System.err.println("messages sql: " + sql);
+		log.debug("messages sql: {}", sql);
 		ResultSet rs = stmt.executeQuery(sql);
 		ArrayList<String> messages = new ArrayList<String>();
 		ArrayList<String> chapters = new ArrayList<String>();
