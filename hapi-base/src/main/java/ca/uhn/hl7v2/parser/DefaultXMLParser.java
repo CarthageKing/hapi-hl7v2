@@ -94,7 +94,7 @@ public class DefaultXMLParser extends XMLParser {
     public DefaultXMLParser(ModelClassFactory theFactory) {
     	super(theFactory);
     }
-    
+
     /**
      * <p>Creates an XML Document that corresponds to the given Message object. </p>
      * <p>If you are implementing this method, you should create an XML Document, and insert XML Elements
@@ -124,13 +124,18 @@ public class DefaultXMLParser extends XMLParser {
      */
     private void encode(Group groupObject, Element groupElement) throws HL7Exception {
         String[] childNames = groupObject.getNames();
+        String[] childFriendlyNames = groupObject.getFriendlyNames();
         String messageName = groupObject.getMessage().getName();
+        String friendlyMessageName = groupObject.getMessage().getFriendlyName();
         
         try {
+        	int counter = -1;
         	for (String name : childNames) {
+        		counter++;
+        		String friendlyName = childFriendlyNames[counter];
                 Structure[] reps = groupObject.getAll(name);
                 for (Structure rep : reps) {
-                    String elementName = makeGroupElementName(messageName, name);
+                    String elementName = makeGroupElementName(outputFriendlyNames, messageName, friendlyMessageName, name, friendlyName);
 					Element childElement;
 					try {
 						childElement = groupElement.getOwnerDocument().createElement(elementName);
@@ -187,6 +192,7 @@ public class DefaultXMLParser extends XMLParser {
      */
     private void parse(Group groupObject, Element groupElement) throws HL7Exception {
         String[] childNames = groupObject.getNames();
+        String[] childFriendlyNames = groupObject.getFriendlyNames();
         String messageName = groupObject.getMessage().getName();
         
         NodeList allChildNodes = groupElement.getChildNodes();
@@ -201,10 +207,13 @@ public class DefaultXMLParser extends XMLParser {
         }
         
         //we're not too fussy about order here (all occurrences get parsed as repetitions) ... 
+        int counter = -1;
         for (String nextChildName : childNames) {
+        	counter++;
+        	String childFriendlyName = childFriendlyNames[counter];
             String childName = nextChildName;
             if(groupObject.isGroup(nextChildName)) {
-            	childName = makeGroupElementName(groupObject.getMessage().getName(), nextChildName);
+            	childName = makeGroupElementName(false, groupObject.getMessage().getName(), groupObject.getMessage().getFriendlyName(), nextChildName, childFriendlyName);
             }
 			unparsedElementList.remove(childName);
             
@@ -228,7 +237,7 @@ public class DefaultXMLParser extends XMLParser {
     private void parseReps(Element groupElement, Group groupObject, 
             String messageName, String childName, String childIndexName) throws HL7Exception {
         
-    	String groupName = makeGroupElementName(messageName, childName);
+    	String groupName = makeGroupElementName(false, messageName, null, childName, null);
         List<Element> reps = getChildElementsByTagName(groupElement, groupName);
         log.trace("# of elements matching {}: {}", groupName, reps.size());
 
@@ -312,28 +321,43 @@ public class DefaultXMLParser extends XMLParser {
      * 
      * If it looks like a segment name (i.e. has 3 characters), no change is made. 
      */
-    protected static String makeGroupElementName(String messageName, String className) {
+    protected static String makeGroupElementName(boolean outFriendlyName, String messageName, String friendlyMessageName, String className, String friendlyName) {
         String ret;
         
         if (className.length() > 4 || ourForceGroupNames.contains(className)) {
             StringBuilder elementName = new StringBuilder();
-            elementName.append(messageName);
-            elementName.append('.');
-            elementName.append(className);
-            ret = elementName.toString();
+            if(outFriendlyName) {
+            	elementName.append(messageName);
+            	elementName.append('.');
+            	elementName.append(className);
+            	ret = elementName + "_" + toSafeXmlTagName(friendlyName);
+            } else {
+            	elementName.append(messageName);
+            	elementName.append('.');
+            	elementName.append(className);
+            	ret = elementName.toString();
+            }
         } else if (className.length() == 4) {
             // It is not clear why this case is needed.. We should figure out
         	// why it was added, since removing it or optimizing its use would
         	// prevent the need for "ourForGroupNames" above
-        	ret = className.substring(0,3);
+			if (outFriendlyName) {
+				ret = className.substring(0, 3) + "_" + toSafeXmlTagName(friendlyName);
+			} else {
+				ret = className.substring(0, 3);
+			}
         } else {
-            ret = className;
+        	if(outFriendlyName) {
+        		ret = className + "_" + toSafeXmlTagName(friendlyName);
+        	} else {
+        		ret = className;
+        	}
         }
         
         return ret;
-    }
+	}
 
-    /** Test harness */
+	/** Test harness */
     public static void main(String args[]) {
         if (args.length != 1) {
             System.out.println("Usage: DefaultXMLParser pipe_encoded_file");

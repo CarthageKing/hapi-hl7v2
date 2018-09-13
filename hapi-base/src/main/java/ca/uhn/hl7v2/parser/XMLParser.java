@@ -82,7 +82,7 @@ public abstract class XMLParser extends Parser {
 	private String textEncoding;
 
 
-
+    protected boolean outputFriendlyNames;
 
 	/** Constructor */
 	public XMLParser() {
@@ -105,6 +105,18 @@ public abstract class XMLParser extends Parser {
 	public XMLParser(ModelClassFactory theFactory) {
 		super(theFactory);
 
+	}
+	
+	/**
+	 * @param outputFriendlyNames - if <tt>true</tt>, then friendly names will be set as the element tag names instead
+	 * of e.g. PID.1
+	 */
+	public void setOutputFriendlyNames(boolean outputFriendlyNames) {
+		this.outputFriendlyNames = outputFriendlyNames;
+	}
+
+	public boolean isOutputFriendlyNames() {
+		return outputFriendlyNames;
 	}
 
 	/**
@@ -341,7 +353,13 @@ public abstract class XMLParser extends Parser {
 			String name = makeElementName(segmentObject, i);
 			Type[] reps = segmentObject.getField(i);
 			for (Type rep : reps) {
-				Element newNode = segmentElement.getOwnerDocument().createElement(name);
+				String friendlyName = rep.getFriendlyName();
+				Element newNode = null;
+				if (outputFriendlyNames) {
+					newNode = segmentElement.getOwnerDocument().createElement(name + "_" + toSafeXmlTagName(friendlyName));
+				} else {
+					newNode = segmentElement.getOwnerDocument().createElement(name);
+				}
 				boolean componentHasValue = encode(rep, newNode);
 				if (componentHasValue) {
 					try {
@@ -354,6 +372,21 @@ public abstract class XMLParser extends Parser {
 			}
 		}
 		return hasValue;
+	}
+	
+	protected static String toSafeXmlTagName(String name) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < name.length(); i++) {
+			char c = name.charAt(i);
+			if (Character.isWhitespace(c)) {
+
+			} else if (!Character.isLetterOrDigit(c)) {
+				sb.append("_");
+			} else {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -663,7 +696,13 @@ public abstract class XMLParser extends Parser {
 		boolean hasValue = false;
 		for (int i = 0; i < components.length; i++) {
 			String name = makeElementName(datatypeObject, i + 1);
-			Element newNode = datatypeElement.getOwnerDocument().createElement(name);
+			String friendlyName = components[i].getFriendlyName();
+			Element newNode = null;
+			if(outputFriendlyNames) {
+				newNode = datatypeElement.getOwnerDocument().createElement(name + "_" + toSafeXmlTagName(friendlyName));
+			} else {
+				newNode = datatypeElement.getOwnerDocument().createElement(name);
+			}
 			boolean componentHasValue = encode(components[i], newNode);
 			if (componentHasValue) {
 				try {
