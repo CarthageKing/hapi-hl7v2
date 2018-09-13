@@ -11,7 +11,7 @@
 	<groupId>ca.uhn.hapi</groupId>
 	<artifactId>hapi</artifactId>
 	<packaging>pom</packaging>
-	<version>2.3</version>
+	<version>pre2.3.ck-custom</version>
 	<name>HAPI - The Open Source Java HL7 Parser and API</name>
 	<url>http://hl7api.sourceforge.net/</url>
 	<description>
@@ -372,8 +372,8 @@
 		<root.basedir>${basedir}</root.basedir>
 
 		<!-- HAPI Versions -->
-		<hapi.version>2.3</hapi.version>
-		<hapi.version.structures>2.3</hapi.version.structures>
+		<hapi.version>${project.version}</hapi.version>
+		<hapi.version.structures>${project.version}</hapi.version.structures>
 		<hapi.version.stable>2.2</hapi.version.stable>
 		<hapi.version.testpanel>2.0.1</hapi.version.testpanel>
 

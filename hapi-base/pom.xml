@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>hapi</artifactId>
 		<groupId>ca.uhn.hapi</groupId>
-		<version>2.3</version>
+		<version>pre2.3.ck-custom</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -86,6 +86,29 @@
 	</reporting>
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>install-jsyntaxpane</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>jsyntaxpane</groupId>
+                            <artifactId>jsyntaxpane</artifactId>
+                            <version>0.9.6-hapi2</version>
+                            <packaging>jar</packaging>
+                            <file>${project.basedir}/localrepo/jsyntaxpane/jsyntaxpane/0.9.6-hapi2/jsyntaxpane-0.9.6-hapi2.jar</file>
+                            <createChecksum>true</createChecksum>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>${maven.site.plugin.version}</version>
